@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: taskmanager-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrongPassword123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - taskmanager-network
+
+  # Backend API
+  server:
+    build: ./server
+    container_name: taskmanager-server
+    environment:
+      - PORT=5000
+      - DB_SERVER=db
+      - DB_DATABASE=TaskManagerDB
+      - DB_USER=sa
+      - DB_PASSWORD=YourStrongPassword123!
+      - DB_PORT=1433
+      - DB_TRUST_SERVER_CERTIFICATE=true
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-12345
+      - JWT_EXPIRES_IN=7d
+      - NODE_ENV=production
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - taskmanager-network
+
+networks:
+  taskmanager-network:
+
+volumes:
+  sql-data:
