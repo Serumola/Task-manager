@@ -1,0 +1,200 @@
+.calendar-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--gray-50);
+}
+
+.calendar-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.today-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--gray-200);
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.today-btn:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--gray-200);
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.current-month {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gray-900);
+  min-width: 250px;
+  text-align: center;
+}
+
+.calendar-container {
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-500);
+  padding: 12px;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  min-height: 100px;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  background-color: var(--gray-50);
+  transition: all 0.2s;
+}
+
+.calendar-day:hover {
+  border-color: var(--gray-300);
+  background-color: var(--white);
+}
+
+.calendar-day.empty {
+  background: none;
+  border: none;
+}
+
+.calendar-day.today {
+  border-color: var(--primary-blue);
+  background-color: #eff6ff;
+}
+
+.day-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.today-indicator {
+  font-size: 10px;
+  color: var(--primary-blue);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.day-tasks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.task-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.more-tasks {
+  font-size: 10px;
+  color: var(--gray-500);
+  padding: 2px 4px;
+}
+
+.calendar-legend {
+  background-color: var(--white);
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.calendar-legend h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin: 0;
+}
+
+.legend-items {
+  display: flex;
+  gap: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--gray-500);
+}
