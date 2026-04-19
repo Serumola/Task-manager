@@ -15,15 +15,10 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - Allow Netlify frontend
 const corsOptions = {
-  origin: [
-    'https://task-manager-02e.netlify.app',
-    'http://localhost:5173',
-    'http://localhost:3000',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+  origin: true, // Allow all origins for production (can be restricted later)
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 
 // Middleware
