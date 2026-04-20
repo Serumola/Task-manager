@@ -13,13 +13,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS Configuration - Allow Netlify frontend
+// CORS Configuration - Allow all origins
 const corsOptions = {
-  origin: true, // Allow all origins for production (can be restricted later)
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
+console.log('CORS enabled for all origins');
 
 // Middleware
 app.use(cors(corsOptions));
