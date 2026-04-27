@@ -13,42 +13,45 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS Configuration - Allow specific production origins
-const allowedOrigins = [
-  'https://task-manager-02e.netlify.app',
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL // Add custom frontend URL from environment
-].filter(Boolean);
-
-// Regex pattern for Netlify preview URLs
-const netlifyPreviewPattern = /^https:\/\/[a-f0-9-]+--task-manager-02e\.netlify\.app$/;
-
+// CORS Configuration - Allow all origins in production
+// For security, you can restrict this to specific domains later
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 ||
-        allowedOrigins.some(allowed => origin && origin.startsWith(allowed)) ||
-        netlifyPreviewPattern.test(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
-console.log('CORS enabled for origins:', allowedOrigins.join(', '));
+
+console.log('CORS enabled for all origins');
+
+// Apply CORS middleware FIRST - before any other middleware
+app.use(cors(corsOptions));
+
+// Custom CORS middleware to ensure headers are always set
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Expose-Headers', 'Content-Range, X-Content-Range');
+  
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  
+  next();
+});
+
+// Handle OPTIONS preflight requests explicitly (before JSON parser)
+app.options('*', cors(corsOptions));
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Handle OPTIONS preflight requests explicitly
-app.options('*', cors(corsOptions));
 
 // Request logging
 app.use((req, res, next) => {
