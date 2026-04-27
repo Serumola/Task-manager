@@ -16,7 +16,6 @@ const PORT = process.env.PORT || 5000;
 // CORS Configuration - Allow specific origins
 const allowedOrigins = [
   'https://task-manager-gamma-seven-55.vercel.app',
-  'https://task-manager-02e.netlify.app',
   'http://localhost:5173',
   'http://localhost:3000'
 ];
