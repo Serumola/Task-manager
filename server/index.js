@@ -13,14 +13,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS Configuration - Allow only your frontend origin
+// CORS Configuration - Allow specific origins
+const allowedOrigins = [
+  'https://task-manager-gamma-seven-55.vercel.app',
+  'https://task-manager-02e.netlify.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 const corsOptions = {
-  origin: [
-    'https://task-manager-gamma-seven-55.vercel.app',
-    'https://task-manager-02e.netlify.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -29,13 +31,36 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-console.log('CORS enabled for: https://task-manager-gamma-seven-55.vercel.app');
+console.log('CORS enabled for origins:', allowedOrigins.join(', '));
 
-// Apply CORS middleware FIRST - before any other middleware
+// Apply CORS middleware FIRST
 app.use(cors(corsOptions));
 
-// Handle OPTIONS preflight requests explicitly
-app.options('*', cors(corsOptions));
+// Custom middleware to ensure CORS headers are always present
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Range, X-Content-Range');
+  
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  
+  next();
+});
+
+// Explicit OPTIONS handler
+app.options('*', (req, res) => {
+  res.status(204).end();
+});
 
 // Middleware
 app.use(express.json());
