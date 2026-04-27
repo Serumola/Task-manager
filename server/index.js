@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - Allow specific origins
 const allowedOrigins = [
+  'https://task-manager-kh55.onrender.com',
   'https://task-manager-gamma-seven-55.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
@@ -31,6 +32,7 @@ const corsOptions = {
 };
 
 console.log('CORS enabled for origins:', allowedOrigins.join(', '));
+console.log('Server starting on port:', process.env.PORT || 5000);
 
 // Apply CORS middleware FIRST
 app.use(cors(corsOptions));
