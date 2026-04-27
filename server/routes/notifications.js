@@ -1,7 +1,6 @@
 import express from 'express';
 import { getPool } from '../db.js';
 import { verifyToken } from '../middleware/auth.js';
-import sql from 'mssql';
 
 const router = express.Router();
 
@@ -10,18 +9,19 @@ router.get('/', verifyToken, async (req, res) => {
   try {
     const { unread } = req.query;
     const pool = await getPool();
-    
-    let query = 'SELECT * FROM notifications WHERE user_id = @userId';
-    const request = pool.request().input('userId', sql.Int, req.userId);
+
+    let query = 'SELECT * FROM notifications WHERE user_id = $1';
+    const params = [req.userId];
 
     if (unread === 'true') {
-      query += ' AND [read] = 0';
+      query += ' AND read = FALSE';
     }
 
     query += ' ORDER BY created_at DESC';
 
-    const result = await request.query(query);
-    res.json({ notifications: result.recordset });
+    const result = await pool.query(query, params);
+
+    res.json({ notifications: result.rows });
   } catch (error) {
     console.error('Get notifications error:', error);
     res.status(500).json({ error: 'Failed to get notifications' });
@@ -31,22 +31,19 @@ router.get('/', verifyToken, async (req, res) => {
 // Mark notification as read
 router.put('/:id/read', verifyToken, async (req, res) => {
   try {
-    const notificationId = req.params.id;
     const pool = await getPool();
 
-    const notification = await pool.request()
-      .input('id', sql.Int, notificationId)
-      .input('userId', sql.Int, req.userId)
-      .query('SELECT * FROM notifications WHERE id = @id AND user_id = @userId');
-    
-    if (notification.recordset.length === 0) {
+    const result = await pool.query(
+      `UPDATE notifications 
+       SET read = TRUE 
+       WHERE id = $1 AND user_id = $2 
+       RETURNING *`,
+      [req.params.id, req.userId]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Notification not found' });
     }
-
-    await pool.request()
-      .input('id', sql.Int, notificationId)
-      .input('userId', sql.Int, req.userId)
-      .query('UPDATE notifications SET [read] = 1 WHERE id = @id AND user_id = @userId');
 
     res.json({ message: 'Notification marked as read' });
   } catch (error) {
@@ -59,37 +56,32 @@ router.put('/:id/read', verifyToken, async (req, res) => {
 router.put('/read-all', verifyToken, async (req, res) => {
   try {
     const pool = await getPool();
-    
-    await pool.request()
-      .input('userId', sql.Int, req.userId)
-      .query('UPDATE notifications SET [read] = 1 WHERE user_id = @userId AND [read] = 0');
+
+    await pool.query(
+      `UPDATE notifications SET read = TRUE WHERE user_id = $1`,
+      [req.userId]
+    );
 
     res.json({ message: 'All notifications marked as read' });
   } catch (error) {
     console.error('Mark all read error:', error);
-    res.status(500).json({ error: 'Failed to mark notifications as read' });
+    res.status(500).json({ error: 'Failed to mark all notifications as read' });
   }
 });
 
 // Delete notification
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const notificationId = req.params.id;
     const pool = await getPool();
 
-    const notification = await pool.request()
-      .input('id', sql.Int, notificationId)
-      .input('userId', sql.Int, req.userId)
-      .query('SELECT * FROM notifications WHERE id = @id AND user_id = @userId');
-    
-    if (notification.recordset.length === 0) {
+    const result = await pool.query(
+      'DELETE FROM notifications WHERE id = $1 AND user_id = $2 RETURNING *',
+      [req.params.id, req.userId]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Notification not found' });
     }
-
-    await pool.request()
-      .input('id', sql.Int, notificationId)
-      .input('userId', sql.Int, req.userId)
-      .query('DELETE FROM notifications WHERE id = @id AND user_id = @userId');
 
     res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
@@ -102,12 +94,13 @@ router.delete('/:id', verifyToken, async (req, res) => {
 router.get('/unread/count', verifyToken, async (req, res) => {
   try {
     const pool = await getPool();
-    
-    const result = await pool.request()
-      .input('userId', sql.Int, req.userId)
-      .query('SELECT COUNT(*) as count FROM notifications WHERE user_id = @userId AND [read] = 0');
 
-    res.json({ count: result.recordset[0].count });
+    const result = await pool.query(
+      'SELECT COUNT(*) as count FROM notifications WHERE user_id = $1 AND read = FALSE',
+      [req.userId]
+    );
+
+    res.json({ count: parseInt(result.rows[0].count) });
   } catch (error) {
     console.error('Get unread count error:', error);
     res.status(500).json({ error: 'Failed to get unread count' });

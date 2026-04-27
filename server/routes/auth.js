@@ -1,4 +1,3 @@
-import express from 'express';
 import bcrypt from 'bcryptjs';
 import { getPool } from '../db.js';
 import { generateToken, verifyToken } from '../middleware/auth.js';
@@ -21,11 +20,9 @@ router.post('/register', async (req, res) => {
     const pool = await getPool();
 
     // Check if user already exists
-    const existingUser = await pool.request()
-      .input('email', sql.NVarChar, email)
-      .query('SELECT id FROM users WHERE email = @email');
+    const existingUser = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
 
-    if (existingUser.recordset.length > 0) {
+    if (existingUser.rows.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
@@ -33,25 +30,21 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert user
-    const result = await pool.request()
-      .input('name', sql.NVarChar, name)
-      .input('email', sql.NVarChar, email)
-      .input('password', sql.NVarChar, hashedPassword)
-      .query(`
-        INSERT INTO users (name, email, password)
-        OUTPUT INSERTED.id, INSERTED.name, INSERTED.email
-        VALUES (@name, @email, @password)
-      `);
+    const result = await pool.query(
+      `INSERT INTO users (name, email, password) 
+       VALUES ($1, $2, $3) 
+       RETURNING id, name, email`,
+      [name, email, hashedPassword]
+    );
 
-    const user = result.recordset[0];
+    const user = result.rows[0];
 
     // Create welcome notification
-    await pool.request()
-      .input('user_id', sql.Int, user.id)
-      .query(`
-        INSERT INTO notifications (user_id, title, message, type)
-        VALUES (@user_id, 'Welcome to Task Manager!', 'Your account has been created successfully.', 'success')
-      `);
+    await pool.query(
+      `INSERT INTO notifications (user_id, title, message, type) 
+       VALUES ($1, $2, $3, $4)`,
+      [user.id, 'Welcome to Task Manager!', 'Your account has been created successfully.', 'success']
+    );
 
     // Generate token
     const token = generateToken(user.id, user.email);
@@ -83,15 +76,13 @@ router.post('/login', async (req, res) => {
     const pool = await getPool();
 
     // Find user
-    const result = await pool.request()
-      .input('email', sql.NVarChar, email)
-      .query('SELECT * FROM users WHERE email = @email');
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
 
-    if (result.recordset.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const user = result.recordset[0];
+    const user = result.rows[0];
 
     // Verify password
     const validPassword = await bcrypt.compare(password, user.password);
@@ -121,16 +112,17 @@ router.post('/login', async (req, res) => {
 router.get('/profile', verifyToken, async (req, res) => {
   try {
     const pool = await getPool();
-    
-    const result = await pool.request()
-      .input('id', sql.Int, req.userId)
-      .query('SELECT id, name, email, created_at FROM users WHERE id = @id');
 
-    if (result.recordset.length === 0) {
+    const result = await pool.query(
+      'SELECT id, name, email, created_at FROM users WHERE id = $1',
+      [req.userId]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json({ user: result.recordset[0] });
+    res.json({ user: result.rows[0] });
   } catch (error) {
     console.error('Profile error:', error);
     res.status(500).json({ error: 'Failed to get profile' });
@@ -147,15 +139,11 @@ router.put('/profile', verifyToken, async (req, res) => {
     }
 
     const pool = await getPool();
-    
-    await pool.request()
-      .input('name', sql.NVarChar, name)
-      .input('id', sql.Int, req.userId)
-      .query(`
-        UPDATE users
-        SET name = @name, updated_at = GETDATE()
-        WHERE id = @id
-      `);
+
+    await pool.query(
+      `UPDATE users SET name = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`,
+      [name, req.userId]
+    );
 
     res.json({ message: 'Profile updated successfully' });
   } catch (error) {
@@ -178,28 +166,22 @@ router.put('/change-password', verifyToken, async (req, res) => {
     }
 
     const pool = await getPool();
-    
-    const result = await pool.request()
-      .input('id', sql.Int, req.userId)
-      .query('SELECT password FROM users WHERE id = @id');
 
-    const user = result.recordset[0];
+    const result = await pool.query('SELECT password FROM users WHERE id = $1', [req.userId]);
+
+    const user = result.rows[0];
     const validPassword = await bcrypt.compare(currentPassword, user.password);
-    
+
     if (!validPassword) {
       return res.status(401).json({ error: 'Current password is incorrect' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-    await pool.request()
-      .input('password', sql.NVarChar, hashedPassword)
-      .input('id', sql.Int, req.userId)
-      .query(`
-        UPDATE users
-        SET password = @password, updated_at = GETDATE()
-        WHERE id = @id
-      `);
+
+    await pool.query(
+      `UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`,
+      [hashedPassword, req.userId]
+    );
 
     res.json({ message: 'Password changed successfully' });
   } catch (error) {
@@ -208,5 +190,5 @@ router.put('/change-password', verifyToken, async (req, res) => {
   }
 });
 
-import sql from 'mssql';
+import express from 'express';
 export default router;

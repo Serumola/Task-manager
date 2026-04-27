@@ -1,164 +1,77 @@
--- Task Manager Database Schema for SQL Server
--- Run this script to create the database and tables
+-- Task Manager Database Schema for PostgreSQL
+-- This schema is automatically applied when the server starts
 
--- Create database (run as admin if database doesn't exist)
--- CREATE DATABASE TaskManagerDB;
--- GO
+-- Tables are created in db.js using the initDatabase() function
+-- This file is for reference only
 
--- Use the database
-USE TaskManagerDB;
-GO
+-- Users table
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- Create users table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
-BEGIN
-    CREATE TABLE users (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        name NVARCHAR(255) NOT NULL,
-        email NVARCHAR(255) UNIQUE NOT NULL,
-        password NVARCHAR(255) NOT NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
-    );
-    PRINT 'Table users created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table users already exists';
-END
-GO
+-- Tasks table
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(500) NOT NULL,
+  description TEXT,
+  status VARCHAR(50) DEFAULT 'pending',
+  priority VARCHAR(50) DEFAULT 'medium',
+  due_date TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- Create tasks table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tasks' AND xtype='U')
-BEGIN
-    CREATE TABLE tasks (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        title NVARCHAR(500) NOT NULL,
-        description NVARCHAR(MAX),
-        status NVARCHAR(50) DEFAULT 'pending',
-        priority NVARCHAR(50) DEFAULT 'medium',
-        due_date DATETIME2,
-        completed_at DATETIME2,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
-        CONSTRAINT FK_tasks_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
-    PRINT 'Table tasks created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table tasks already exists';
-END
-GO
+-- Projects table
+CREATE TABLE projects (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  color VARCHAR(50) DEFAULT '#3b82f6',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- Create task_history table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='task_history' AND xtype='U')
-BEGIN
-    CREATE TABLE task_history (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        task_id INT NOT NULL,
-        user_id INT NOT NULL,
-        action NVARCHAR(100) NOT NULL,
-        old_value NVARCHAR(MAX),
-        new_value NVARCHAR(MAX),
-        created_at DATETIME2 DEFAULT GETDATE(),
-        CONSTRAINT FK_task_history_tasks FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE,
-        CONSTRAINT FK_task_history_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
-    PRINT 'Table task_history created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table task_history already exists';
-END
-GO
+-- Task-Projects junction table
+CREATE TABLE task_projects (
+  task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  PRIMARY KEY (task_id, project_id)
+);
 
--- Create projects table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='projects' AND xtype='U')
-BEGIN
-    CREATE TABLE projects (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        name NVARCHAR(255) NOT NULL,
-        description NVARCHAR(MAX),
-        color NVARCHAR(50) DEFAULT '#3b82f6',
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
-        CONSTRAINT FK_projects_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
-    PRINT 'Table projects created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table projects already exists';
-END
-GO
+-- Task history table
+CREATE TABLE task_history (
+  id SERIAL PRIMARY KEY,
+  task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  action VARCHAR(100) NOT NULL,
+  old_value JSONB,
+  new_value JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- Create task_projects junction table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='task_projects' AND xtype='U')
-BEGIN
-    CREATE TABLE task_projects (
-        task_id INT NOT NULL,
-        project_id INT NOT NULL,
-        PRIMARY KEY (task_id, project_id),
-        CONSTRAINT FK_task_projects_tasks FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE,
-        CONSTRAINT FK_task_projects_projects FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
-    );
-    PRINT 'Table task_projects created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table task_projects already exists';
-END
-GO
+-- Notifications table
+CREATE TABLE notifications (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  type VARCHAR(50) DEFAULT 'info',
+  read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
--- Create notifications table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='notifications' AND xtype='U')
-BEGIN
-    CREATE TABLE notifications (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        title NVARCHAR(255) NOT NULL,
-        message NVARCHAR(MAX) NOT NULL,
-        type NVARCHAR(50) DEFAULT 'info',
-        read BIT DEFAULT 0,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        CONSTRAINT FK_notifications_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
-    PRINT 'Table notifications created successfully';
-END
-ELSE
-BEGIN
-    PRINT 'Table notifications already exists';
-END
-GO
-
--- Create indexes for better performance
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tasks_user_id')
-BEGIN
-    CREATE INDEX IX_tasks_user_id ON tasks(user_id);
-END
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tasks_status')
-BEGIN
-    CREATE INDEX IX_tasks_status ON tasks(status);
-END
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tasks_due_date')
-BEGIN
-    CREATE INDEX IX_tasks_due_date ON tasks(due_date);
-END
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_notifications_user_id')
-BEGIN
-    CREATE INDEX IX_notifications_user_id ON notifications(user_id);
-END
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_task_history_user_id')
-BEGIN
-    CREATE INDEX IX_task_history_user_id ON task_history(user_id);
-END
-
-PRINT 'Database schema setup completed!';
-GO
+-- Indexes for better performance
+CREATE INDEX idx_tasks_user_id ON tasks(user_id);
+CREATE INDEX idx_tasks_status ON tasks(status);
+CREATE INDEX idx_tasks_due_date ON tasks(due_date);
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_task_history_user_id ON task_history(user_id);
+CREATE INDEX idx_projects_user_id ON projects(user_id);
