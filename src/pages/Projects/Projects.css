@@ -6,8 +6,14 @@
 
 .projects-content {
   flex: 1;
-  padding: 30px;
+  padding: var(--page-padding);
   overflow-y: auto;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .projects-content {
+  margin-left: 80px;
 }
 
 .projects-header {
@@ -15,6 +21,8 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .add-project-btn {
@@ -30,6 +38,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .add-project-btn:hover {
@@ -71,6 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .project-actions {
@@ -78,6 +88,7 @@
   gap: 8px;
   opacity: 0;
   transition: opacity 0.2s;
+  flex-shrink: 0;
 }
 
 .project-card:hover .project-actions {
@@ -121,6 +132,7 @@
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 8px;
+  word-break: break-word;
 }
 
 .project-description {
@@ -128,11 +140,13 @@
   color: var(--gray-600);
   margin-bottom: 16px;
   line-height: 1.5;
+  word-break: break-word;
 }
 
 .project-stats {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .project-stats .stat {
@@ -170,6 +184,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 16px;
 }
 
 .modal-content {
@@ -178,6 +193,8 @@
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-content h2 {
@@ -228,6 +245,7 @@
   border: 3px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .color-option:hover {
@@ -243,6 +261,7 @@
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
+  flex-wrap: wrap;
 }
 
 .cancel-btn {
@@ -275,4 +294,47 @@
 
 .submit-btn:hover {
   background-color: var(--primary-blue-dark);
+}
+
+/* Mobile - 768px */
+@media (max-width: 768px) {
+  .projects-content {
+    margin-left: 0;
+    padding: var(--page-padding-mobile);
+    padding-top: 70px;
+  }
+
+  .projects-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-project-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-actions {
+    opacity: 1;
+  }
+
+  .modal-content {
+    padding: 20px;
+    max-height: 85vh;
+  }
+}
+
+/* Small mobile - 480px */
+@media (max-width: 480px) {
+  .project-name {
+    font-size: 16px;
+  }
+
+  .project-description {
+    font-size: 13px;
+  }
 }

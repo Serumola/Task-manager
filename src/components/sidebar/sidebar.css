@@ -8,6 +8,10 @@
   transition: width 0.3s ease;
   box-shadow: var(--shadow-lg);
   border-right: 1px solid var(--gray-700);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 .sidebar-container.collapsed {
@@ -18,12 +22,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px;
+  padding: 20px;
   border-bottom: 1px solid var(--gray-700);
 }
 
 .sidebar-logo {
   font-size: 28px;
+  flex-shrink: 0;
 }
 
 .sidebar-title {
@@ -32,6 +37,7 @@
   flex: 1;
   margin-left: 12px;
   color: var(--white);
+  white-space: nowrap;
 }
 
 .collapse-btn {
@@ -43,6 +49,7 @@
   padding: 8px;
   border-radius: var(--radius-sm);
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .collapse-btn:hover {
@@ -68,6 +75,7 @@
   outline: none;
   flex: 1;
   font-size: 14px;
+  min-width: 0;
 }
 
 .sidebar-search input::placeholder {
@@ -77,6 +85,7 @@
 .sidebar-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 20px;
 }
 
@@ -91,6 +100,7 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .sidebar-menu {
@@ -110,6 +120,7 @@
   cursor: pointer;
   transition: all 0.2s;
   border-left: 3px solid transparent;
+  white-space: nowrap;
 }
 
 .menu-item:hover {
@@ -190,6 +201,7 @@
   display: flex;
   align-items: center;
   transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .logout-btn:hover {
@@ -219,4 +231,57 @@
 
 .sidebar-container.collapsed .logout-btn {
   display: none;
+}
+
+/* Mobile sidebar - hidden by default on small screens */
+@media (max-width: 768px) {
+  .sidebar-container {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-container.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-container.collapsed {
+    width: 260px;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+}
+
+/* Mobile menu toggle button (shown in main content) */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-btn:hover {
+  background-color: var(--gray-100);
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.sidebar-overlay.active {
+  display: block;
 }

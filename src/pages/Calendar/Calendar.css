@@ -6,8 +6,14 @@
 
 .calendar-content {
   flex: 1;
-  padding: 30px;
+  padding: var(--page-padding);
   overflow-y: auto;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .calendar-content {
+  margin-left: 80px;
 }
 
 .calendar-header {
@@ -15,12 +21,15 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .calendar-controls {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .today-btn {
@@ -32,6 +41,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .today-btn:hover {
@@ -67,7 +77,7 @@
   font-size: 24px;
   font-weight: 700;
   color: var(--gray-900);
-  min-width: 250px;
+  min-width: 200px;
   text-align: center;
 }
 
@@ -77,12 +87,14 @@
   box-shadow: var(--shadow-md);
   padding: 24px;
   margin-bottom: 24px;
+  overflow-x: auto;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
+  min-width: 700px;
 }
 
 .day-header {
@@ -162,6 +174,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .calendar-legend h3 {
@@ -174,6 +187,7 @@
 .legend-items {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .legend-item {
@@ -197,4 +211,72 @@
   padding: 60px 20px;
   text-align: center;
   color: var(--gray-500);
+}
+
+/* Mobile - 768px */
+@media (max-width: 768px) {
+  .calendar-content {
+    margin-left: 0;
+    padding: var(--page-padding-mobile);
+    padding-top: 70px;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendar-controls {
+    justify-content: space-between;
+  }
+
+  .current-month {
+    font-size: 20px;
+    min-width: auto;
+    order: -1;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .today-btn {
+    flex: 1;
+  }
+
+  .calendar-container {
+    padding: 16px;
+  }
+
+  .calendar-grid {
+    min-width: 600px;
+  }
+
+  .calendar-day {
+    min-height: 80px;
+  }
+
+  .calendar-legend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Small mobile - 480px */
+@media (max-width: 480px) {
+  .calendar-grid {
+    min-width: 500px;
+  }
+
+  .calendar-day {
+    min-height: 60px;
+    padding: 4px;
+  }
+
+  .day-number {
+    font-size: 12px;
+  }
+
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+  }
 }

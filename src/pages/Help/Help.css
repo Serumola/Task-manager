@@ -6,8 +6,14 @@
 
 .help-content {
   flex: 1;
-  padding: 30px;
+  padding: var(--page-padding);
   overflow-y: auto;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .help-content {
+  margin-left: 80px;
 }
 
 .help-header {
@@ -43,6 +49,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
+  flex-shrink: 0;
 }
 
 .help-card-icon.book {
@@ -101,6 +108,7 @@
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .faq-list {
@@ -172,8 +180,47 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 900px) {
+/* Mobile - 768px */
+@media (max-width: 768px) {
+  .help-content {
+    margin-left: 0;
+    padding: var(--page-padding-mobile);
+    padding-top: 70px;
+  }
+
   .help-cards {
     grid-template-columns: 1fr;
+  }
+
+  .help-card {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .support-section {
+    padding: 24px;
+  }
+
+  .support-text {
+    font-size: 14px;
+  }
+}
+
+/* Small mobile - 480px */
+@media (max-width: 480px) {
+  .help-card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .help-card h3 {
+    font-size: 16px;
+  }
+
+  .faq-question {
+    font-size: 15px;
   }
 }

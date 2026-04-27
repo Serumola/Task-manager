@@ -6,8 +6,14 @@
 
 .notifications-content {
   flex: 1;
-  padding: 30px;
+  padding: var(--page-padding);
   overflow-y: auto;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .notifications-content {
+  margin-left: 80px;
 }
 
 .notifications-header {
@@ -15,6 +21,8 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .page-title {
@@ -33,6 +41,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filter-select {
@@ -62,6 +71,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .mark-all-btn:hover {
@@ -111,6 +121,7 @@
   box-shadow: var(--shadow-sm);
   transition: all 0.2s;
   border-left: 4px solid transparent;
+  flex-wrap: wrap;
 }
 
 .notification-item:hover {
@@ -161,12 +172,14 @@
   font-weight: 600;
   color: var(--gray-900);
   margin-bottom: 4px;
+  word-break: break-word;
 }
 
 .notification-message {
   font-size: 14px;
   color: var(--gray-600);
   margin-bottom: 8px;
+  word-break: break-word;
 }
 
 .notification-time {
@@ -179,6 +192,7 @@
   gap: 8px;
   opacity: 0;
   transition: opacity 0.2s;
+  flex-shrink: 0;
 }
 
 .notification-item:hover .notification-actions {
@@ -215,4 +229,49 @@
 .delete-btn:hover {
   background-color: var(--error-red);
   color: var(--white);
+}
+
+/* Mobile - 768px */
+@media (max-width: 768px) {
+  .notifications-content {
+    margin-left: 0;
+    padding: var(--page-padding-mobile);
+    padding-top: 70px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .notifications-actions {
+    width: 100%;
+  }
+
+  .filter-select {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .mark-all-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .notification-item {
+    flex-direction: column;
+  }
+
+  .notification-actions {
+    opacity: 1;
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Small mobile - 480px */
+@media (max-width: 480px) {
+  .filter-select,
+  .mark-all-btn {
+    width: 100%;
+  }
 }
