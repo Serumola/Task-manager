@@ -21,12 +21,16 @@ const allowedOrigins = [
   process.env.FRONTEND_URL // Add custom frontend URL from environment
 ].filter(Boolean);
 
+// Regex pattern for Netlify preview URLs
+const netlifyPreviewPattern = /^https:\/\/[a-f0-9-]+--task-manager-02e\.netlify\.app$/;
+
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || 
-        allowedOrigins.some(allowed => origin && origin.startsWith(allowed))) {
+    if (allowedOrigins.indexOf(origin) !== -1 ||
+        allowedOrigins.some(allowed => origin && origin.startsWith(allowed)) ||
+        netlifyPreviewPattern.test(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
