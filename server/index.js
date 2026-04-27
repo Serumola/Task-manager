@@ -15,16 +15,18 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - Allow specific production origins
 const allowedOrigins = [
-  'https://task-manager-02e.netlify.app/',
+  'https://task-manager-02e.netlify.app',
   'http://localhost:5173',
-  'http://localhost:3000'
-];
+  'http://localhost:3000',
+  process.env.FRONTEND_URL // Add custom frontend URL from environment
+].filter(Boolean);
 
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || 
+        allowedOrigins.some(allowed => origin && origin.startsWith(allowed))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
