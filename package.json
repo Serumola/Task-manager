@@ -1,13 +1,37 @@
 {
-  "name": "task-manager",
-  "private": true,
-  "version": "0.0.0",
+  "name": "taskmaster",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
+  "description": "TaskMaster - All-in-one task management and productivity application",
+  "author": "TaskMaster Team",
+  "license": "MIT",
+  "keywords": [
+    "task-manager",
+    "productivity",
+    "project-management",
+    "todo-list",
+    "task-organization",
+    "goal-tracking",
+    "time-management",
+    "react-app",
+    "saas"
+  ],
+  "homepage": "https://task-manager-02e.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/task-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/task-manager/issues",
+    "email": "support@taskmaster.com"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seo:audit": "echo 'SEO Audit: Check index.html meta tags, sitemap.xml, and robots.txt'"
   },
   "dependencies": {
     "gsap": "^3.15.0",
