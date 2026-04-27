@@ -15,7 +15,12 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - Allow only your frontend origin
 const corsOptions = {
-  origin: ['https://task-manager-02e.netlify.app', 'http://localhost:5173', 'http://localhost:3000'], // Allow only your frontend origin
+  origin: [
+    'https://task-manager-gamma-seven-55.vercel.app',
+    'https://task-manager-02e.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -24,7 +29,7 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-console.log('CORS enabled for: https://task-manager-02e.netlify.app');
+console.log('CORS enabled for: https://task-manager-gamma-seven-55.vercel.app');
 
 // Apply CORS middleware FIRST - before any other middleware
 app.use(cors(corsOptions));
