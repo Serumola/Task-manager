@@ -1,3 +1,5 @@
+@import './styles/darkMode.css';
+
 :root {
   /* Primary Colors */
   --primary-blue: #2563eb;

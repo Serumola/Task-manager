@@ -1,0 +1,338 @@
+/* Dark Mode Styles */
+.dark-mode {
+  --dm-bg-primary: #0f172a;
+  --dm-bg-secondary: #1e293b;
+  --dm-bg-tertiary: #334155;
+  --dm-text-primary: #f8fafc;
+  --dm-text-secondary: #cbd5e1;
+  --dm-text-muted: #64748b;
+  --dm-border: #334155;
+  --dm-sidebar-bg: #020617;
+  --dm-card-bg: #1e293b;
+  --dm-input-bg: #334155;
+  --dm-hover-bg: #475569;
+}
+
+/* Dark mode overrides */
+.dark-mode .dashboard-main-wrapper,
+.dark-mode .mytasks-page,
+.dark-mode .calendar-page,
+.dark-mode .reports-page,
+.dark-mode .notifications-page,
+.dark-mode .settings-page,
+.dark-mode .help-page {
+  background: linear-gradient(135deg, var(--dm-bg-primary) 0%, #1e293b 100%);
+}
+
+.dark-mode .dashboard-main-content,
+.dark-mode .mytasks-content,
+.dark-mode .calendar-content,
+.dark-mode .reports-content,
+.dark-mode .notifications-content,
+.dark-mode .settings-content,
+.dark-mode .help-content {
+  background: transparent;
+}
+
+.dark-mode .page-title {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .page-subtitle {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .stat-card,
+.dark-mode .chart-card,
+.dark-mode .task-card,
+.dark-mode .task-item,
+.dark-mode .add-task-section,
+.dark-mode .task-list-section {
+  background: linear-gradient(135deg, var(--dm-card-bg) 0%, var(--dm-bg-tertiary) 100%);
+  border-color: var(--dm-border);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .stat-header h3,
+.dark-mode .chart-header h3,
+.dark-mode .section-header h2,
+.dark-mode .task-list-section h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .stat-number {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .task-input-box,
+.dark-mode .form-input,
+.dark-mode .form-textarea,
+.dark-mode .form-select {
+  background: var(--dm-input-bg);
+  border-color: var(--dm-border);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .task-input-box::placeholder,
+.dark-mode .form-input::placeholder,
+.dark-mode .form-textarea::placeholder {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .add-btn {
+  background: var(--dm-card-bg);
+  border-color: var(--dm-border);
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .add-btn:hover {
+  border-color: #10b981;
+  color: #10b981;
+  background: var(--dm-card-bg);
+}
+
+.dark-mode .legend-item:hover {
+  background-color: var(--dm-hover-bg);
+}
+
+.dark-mode .quick-stat-item {
+  background: linear-gradient(135deg, var(--dm-bg-tertiary) 0%, var(--dm-card-bg) 100%);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .quick-stat-item:hover {
+  background: linear-gradient(135deg, var(--dm-hover-bg) 0%, var(--dm-card-bg) 100%);
+  border-color: #475569;
+}
+
+.dark-mode .bar-wrapper {
+  background: linear-gradient(to top, var(--dm-bg-tertiary), var(--dm-border));
+  border-color: var(--dm-border);
+}
+
+.dark-mode .pie-chart circle:last-child {
+  fill: var(--dm-card-bg);
+}
+
+/* Sidebar dark mode */
+.dark-mode .sidebar-container {
+  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  border-right-color: #1e293b;
+}
+
+.dark-mode .mobile-navbar {
+  background: var(--dm-sidebar-bg);
+}
+
+.dark-mode .mobile-navbar .navbar-title {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .mobile-menu-drawer {
+  background: var(--dm-bg-secondary);
+}
+
+.dark-mode .mobile-menu-header {
+  border-bottom-color: var(--dm-border);
+  background: var(--dm-bg-tertiary);
+}
+
+.dark-mode .mobile-section-label {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .mobile-menu-item {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .mobile-menu-item:hover {
+  background-color: var(--dm-hover-bg);
+}
+
+/* Modal dark mode */
+.dark-mode .modal-content {
+  background: var(--dm-bg-secondary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .modal-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .form-section-title {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .form-label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .modal-close:hover {
+  background-color: var(--dm-hover-bg);
+}
+
+.dark-mode .cancel-btn {
+  background: var(--dm-bg-tertiary);
+  border-color: var(--dm-border);
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .cancel-btn:hover {
+  background: var(--dm-hover-bg);
+}
+
+/* Toast dark mode */
+.dark-mode .toast {
+  background: var(--dm-bg-secondary);
+  border-left-color: #10b981;
+}
+
+.dark-mode .toast-message {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .toast-close:hover {
+  background-color: var(--dm-hover-bg);
+}
+
+/* Scrollbar dark mode */
+.dark-mode ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  border-color: #1e293b;
+}
+
+.dark-mode ::-webkit-scrollbar-corner {
+  background: #1e293b;
+}
+
+/* Keyboard shortcuts dark mode */
+.dark-mode .keyboard-modal {
+  background: var(--dm-bg-secondary);
+}
+
+.dark-mode .keyboard-modal-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .keyboard-modal-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .keyboard-section h3 {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .keyboard-item {
+  background: var(--dm-bg-tertiary);
+}
+
+.dark-mode .keyboard-item:hover {
+  background: var(--dm-hover-bg);
+}
+
+.dark-mode kbd {
+  background: var(--dm-bg-secondary);
+  border-color: var(--dm-border);
+  color: var(--dm-text-secondary);
+  box-shadow: 0 2px 0 var(--dm-border);
+}
+
+.dark-mode .keyboard-description {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .keyboard-modal-footer {
+  border-top-color: var(--dm-border);
+}
+
+.dark-mode .keyboard-modal-footer p {
+  color: var(--dm-text-muted);
+}
+
+/* Date box dark mode */
+.dark-mode .date-box {
+  background: linear-gradient(135deg, var(--dm-bg-tertiary) 0%, var(--dm-bg-secondary) 100%);
+  border-color: var(--dm-border);
+  color: var(--dm-text-secondary);
+}
+
+/* Task done state dark mode */
+.dark-mode .task-item.task-done {
+  background: linear-gradient(135deg, var(--dm-bg-tertiary) 0%, var(--dm-bg-primary) 100%);
+}
+
+.dark-mode .task-item.task-done .task-name-text {
+  color: var(--dm-text-muted);
+}
+
+/* Priority badge dark mode */
+.dark-mode .priority-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+/* Filter buttons dark mode */
+.dark-mode .filter-btn {
+  background: var(--dm-bg-tertiary);
+  color: var(--dm-text-secondary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .filter-btn.active {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+/* Stats overview dark mode */
+.dark-mode .overview-card {
+  background: linear-gradient(135deg, var(--dm-card-bg) 0%, var(--dm-bg-tertiary) 100%);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .overview-label {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .overview-value {
+  color: var(--dm-text-primary);
+}
+
+/* Alert cards dark mode */
+.dark-mode .alert-card {
+  background: linear-gradient(135deg, var(--dm-card-bg) 0%, var(--dm-bg-tertiary) 100%);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .alert-value {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .alert-label {
+  color: var(--dm-text-muted);
+}
+
+/* Empty state dark mode */
+.dark-mode .empty-state,
+.dark-mode .loading-state,
+.dark-mode .no-tasks-text {
+  color: var(--dm-text-muted);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .dark-mode .dashboard-main-content,
+  .dark-mode .mytasks-content,
+  .dark-mode .calendar-content,
+  .dark-mode .reports-content {
+    background: transparent;
+  }
+}

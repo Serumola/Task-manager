@@ -1,0 +1,184 @@
+.keyboard-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.keyboard-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.keyboard-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.keyboard-modal-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.keyboard-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #94a3b8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.keyboard-modal-close:hover {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.keyboard-modal-content {
+  padding: 24px;
+}
+
+.keyboard-section {
+  margin-bottom: 24px;
+}
+
+.keyboard-section:last-child {
+  margin-bottom: 0;
+}
+
+.keyboard-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.keyboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyboard-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.keyboard-item:hover {
+  background: #f1f5f9;
+}
+
+.keyboard-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  font-family: inherit;
+  box-shadow: 0 2px 0 #e2e8f0;
+}
+
+.keyboard-description {
+  font-size: 14px;
+  color: #475569;
+  font-weight: 500;
+}
+
+.keyboard-modal-footer {
+  padding: 20px 24px;
+  border-top: 2px solid #f1f5f9;
+  text-align: center;
+}
+
+.keyboard-modal-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.keyboard-modal-footer kbd {
+  min-width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .keyboard-modal {
+    max-height: 90vh;
+  }
+
+  .keyboard-modal-header {
+    padding: 20px;
+  }
+
+  .keyboard-modal-content {
+    padding: 20px;
+  }
+
+  .keyboard-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
