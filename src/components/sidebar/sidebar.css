@@ -178,6 +178,7 @@
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  display: block;
 }
 
 .user-name {
@@ -187,6 +188,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 
 .user-email {
@@ -195,6 +197,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 
 .logout-btn {
@@ -219,7 +222,7 @@
 .sidebar-container.collapsed .section-label,
 .sidebar-container.collapsed .sidebar-search input,
 .sidebar-container.collapsed .user-info {
-  display: none;
+  display: none !important;
 }
 
 .sidebar-container.collapsed .sidebar-footer {
@@ -241,6 +244,21 @@
   right: 4px;
   top: 50%;
   transform: translateY(-50%);
+}
+
+/* Ensure user info is visible when not collapsed */
+.sidebar-container:not(.collapsed) .user-info {
+  display: block !important;
+}
+
+.sidebar-container:not(.collapsed) .user-profile {
+  justify-content: flex-start;
+}
+
+.sidebar-container:not(.collapsed) .logout-btn {
+  display: flex;
+  position: static;
+  transform: none;
 }
 
 /* Mobile Top Navbar */

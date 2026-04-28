@@ -122,9 +122,14 @@ export default function Dashboard() {
     try {
       const newStatus = currentStatus === "completed" ? "pending" : "completed";
       await tasksAPI.update(id, { status: newStatus });
+      // Update local state immediately for better UX
+      setTaskList(taskList.map(task => 
+        task.id === id ? { ...task, status: newStatus } : task
+      ));
+      // Then refresh dashboard data
       fetchDashboardData();
     } catch (err) {
-      console.error("Failed to update task");
+      console.error("Failed to update task", err);
     }
   }
 
