@@ -95,12 +95,6 @@ export default function Sidebar() {
         </div>
 
         {/* SEARCH */}
-        {!collapsed && (
-          <div className="sidebar-search">
-            <Search size={18} />
-            <input placeholder="Quick search..." />
-          </div>
-        )}
 
         {/* MENU CONTENT */}
         <div className="sidebar-content">
@@ -145,14 +139,10 @@ export default function Sidebar() {
             <div className="user-avatar">
               {user?.name?.charAt(0)?.toUpperCase() || <User size={18} />}
             </div>
-            {!collapsed && (
-              <>
-                <div className="user-info">
-                  <p className="user-name">{user?.name || 'User'}</p>
-                  <p className="user-email">{user?.email || ''}</p>
-                </div>
-              </>
-            )}
+            <div className="user-info">
+              <p className="user-name">{user?.name || 'User'}</p>
+              <p className="user-email">{user?.email || ''}</p>
+            </div>
             <button
               className="logout-btn"
               onClick={handleLogout}

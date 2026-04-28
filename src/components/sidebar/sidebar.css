@@ -220,7 +220,6 @@
 
 .sidebar-container.collapsed .sidebar-title,
 .sidebar-container.collapsed .section-label,
-.sidebar-container.collapsed .sidebar-search input,
 .sidebar-container.collapsed .user-info {
   display: none !important;
 }
@@ -259,6 +258,11 @@
   display: flex;
   position: static;
   transform: none;
+}
+
+/* Hide search bar */
+.sidebar-search {
+  display: none !important;
 }
 
 /* Mobile Top Navbar */
