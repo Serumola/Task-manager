@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--gray-100) 0%, var(--primary-blue-light) 100%);
+  background: linear-gradient(135deg, var(--green-50) 0%, var(--green-100) 100%);
   padding: 20px;
 }
 
@@ -14,7 +14,7 @@
   box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 450px;
-  border: black;
+  border: 1px solid var(--green-200);
 }
 
 .login-header {
@@ -57,15 +57,16 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border: 2px solid var(--gray-200);
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-md);
   transition: all 0.2s;
-  background-color: var(--gray-50);
+  background-color: var(--gray-100);
 }
 
 .input-with-icon:focus-within {
-  border-color: var(--primary-blue);
+  border-color: var(--green-600);
   background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 .input-with-icon input {
@@ -79,11 +80,11 @@
 }
 
 .input-with-icon input::placeholder {
-  color: var(--gray-400);
+  color: var(--gray-500);
 }
 
 .input-with-icon svg {
-  color: var(--gray-500);
+  color: var(--gray-600);
   flex-shrink: 0;
 }
 
@@ -98,7 +99,7 @@
 }
 
 .show-password-btn:hover {
-  color: var(--primary-blue);
+  color: var(--green-600);
 }
 
 .form-options {
@@ -123,25 +124,25 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: var(--primary-blue);
+  accent-color: var(--green-600);
 }
 
 .forgot-link {
   font-size: 14px;
-  color: var(--primary-blue);
+  color: var(--green-600);
   text-decoration: none;
   font-weight: 600;
 }
 
 .forgot-link:hover {
-  color: var(--primary-blue-dark);
+  color: var(--green-700);
   text-decoration: underline;
 }
 
 .login-button {
   width: 100%;
   padding: 14px;
-  background-color: var(--primary-blue);
+  background: linear-gradient(135deg, var(--green-600) 0%, var(--green-700) 100%);
   color: var(--white);
   border: none;
   border-radius: var(--radius-md);
@@ -153,9 +154,9 @@
 }
 
 .login-button:hover {
-  background-color: var(--primary-blue-dark);
+  background: linear-gradient(135deg, var(--green-700) 0%, var(--green-800) 100%);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
 .login-divider {
@@ -221,7 +222,7 @@
 }
 
 .signup-link-text a {
-  color: var(--primary-blue);
+  color: var(--green-600);
   text-decoration: none;
   font-weight: 600;
 }
@@ -243,7 +244,7 @@
 }
 
 .back-home a:hover {
-  color: var(--primary-blue);
+  color: var(--green-600);
 }
 
 /* Mobile - 768px */
