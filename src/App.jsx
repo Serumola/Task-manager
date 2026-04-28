@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
@@ -22,6 +23,8 @@ import Help from "./pages/Help/Help";
 import Settings from "./pages/Settings/Settings";
 
 function App() {
+  const [showShortcutsModal, setShowShortcutsModal] = useState(false);
+  
   return (
     <AuthProvider>
       <DarkModeProvider>
@@ -73,7 +76,7 @@ function App() {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
           <DarkModeToggle />
-          <KeyboardShortcutsModal />
+          <KeyboardShortcutsModal isOpen={showShortcutsModal} onClose={() => setShowShortcutsModal(false)} />
         </ToastProvider>
       </DarkModeProvider>
     </AuthProvider>

@@ -117,7 +117,11 @@ export default function Dashboard() {
       // Then refresh dashboard data
       fetchDashboardData();
     } catch (err) {
-      toast.error("Failed to update task");
+      // Revert the optimistic update on error
+      setTaskList(taskList.map(task =>
+        task.id === id ? { ...task, status: currentStatus } : task
+      ));
+      toast.error("Failed to update task. Please check your connection.");
     }
   }
 

@@ -6,7 +6,7 @@ const getToken = () => localStorage.getItem('token');
 // Generic API request function
 async function apiRequest(endpoint, options = {}) {
   const token = getToken();
-  
+
   const config = {
     ...options,
     headers: {
@@ -18,6 +18,14 @@ async function apiRequest(endpoint, options = {}) {
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    
+    // Handle 401 unauthorized - token expired
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+      throw new Error('Session expired. Please login again.');
+    }
+    
     const data = await response.json();
 
     if (!response.ok) {
@@ -26,7 +34,11 @@ async function apiRequest(endpoint, options = {}) {
 
     return data;
   } catch (error) {
-    console.error('API Error:', error);
+    // Network error - API might be down
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error('API unavailable - backend server may be down');
+    }
+    console.error('API Error:', error.message);
     throw error;
   }
 }
