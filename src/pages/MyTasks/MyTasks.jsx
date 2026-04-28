@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import { tasksAPI, projectsAPI } from "../../services/api";
-import { Plus, Trash2, Edit, CheckCircle, Circle, Calendar, Flag, Folder } from "lucide-react";
+import { Plus, Trash2, Edit, CheckCircle, Circle, Calendar, Flag, Folder, X, AlertTriangle } from "lucide-react";
 import "./MyTasks.css";
 
 export default function MyTasks() {
@@ -10,12 +10,22 @@ export default function MyTasks() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [editingTask, setEditingTask] = useState(null);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     priority: "medium",
     due_date: "",
     project_ids: []
+  });
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    priority: "medium",
+    due_date: ""
   });
 
   useEffect(() => {
@@ -49,19 +59,51 @@ export default function MyTasks() {
     try {
       const newStatus = currentStatus === "completed" ? "pending" : "completed";
       await tasksAPI.update(id, { status: newStatus });
-      fetchTasks();
+      // Update local state immediately
+      setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
     } catch (err) {
       console.error("Failed to update task");
     }
   }
 
-  async function deleteTask(id) {
-    if (!confirm("Are you sure you want to delete this task?")) return;
+  function confirmDelete(task) {
+    setTaskToDelete(task);
+    setShowDeleteModal(true);
+  }
+
+  async function deleteTask() {
+    if (!taskToDelete) return;
     try {
-      await tasksAPI.delete(id);
-      setTasks(tasks.filter(t => t.id !== id));
+      await tasksAPI.delete(taskToDelete.id);
+      setTasks(tasks.filter(t => t.id !== taskToDelete.id));
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
     } catch (err) {
       console.error("Failed to delete task");
+    }
+  }
+
+  function openEditModal(task) {
+    setEditingTask(task);
+    setEditForm({
+      title: task.title,
+      description: task.description || "",
+      priority: task.priority,
+      due_date: task.due_date ? task.due_date.split('T')[0] : ""
+    });
+    setShowEditModal(true);
+  }
+
+  async function updateTask(e) {
+    e.preventDefault();
+    if (!editingTask) return;
+    try {
+      await tasksAPI.update(editingTask.id, editForm);
+      setTasks(tasks.map(t => t.id === editingTask.id ? { ...t, ...editForm } : t));
+      setShowEditModal(false);
+      setEditingTask(null);
+    } catch (err) {
+      console.error("Failed to update task");
     }
   }
 
@@ -212,10 +254,10 @@ export default function MyTasks() {
                   </div>
                 </div>
                 <div className="task-actions">
-                  <button className="action-btn edit" title="Edit">
+                  <button className="action-btn edit" onClick={() => openEditModal(task)} title="Edit">
                     <Edit size={18} />
                   </button>
-                  <button className="action-btn delete" onClick={() => deleteTask(task.id)} title="Delete">
+                  <button className="action-btn delete" onClick={() => confirmDelete(task)} title="Delete">
                     <Trash2 size={18} />
                   </button>
                 </div>
@@ -288,6 +330,128 @@ export default function MyTasks() {
                 </button>
                 <button type="submit" className="submit-btn">
                   Create Task
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Professional Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+          <div className="modal-content delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-modal-icon">
+              <AlertTriangle size={48} />
+            </div>
+            <h2>Delete Task?</h2>
+            <p className="delete-modal-message">
+              Are you sure you want to delete <strong>"{taskToDelete?.title}"</strong>?
+            </p>
+            <p className="delete-modal-warning">
+              This action cannot be undone and all task data will be permanently removed.
+            </p>
+            <div className="modal-actions">
+              <button type="button" className="cancel-btn" onClick={() => setShowDeleteModal(false)}>
+                Cancel
+              </button>
+              <button type="button" className="delete-btn" onClick={deleteTask}>
+                <Trash2 size={18} />
+                Delete Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Task Modal */}
+      {showEditModal && editingTask && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title-wrapper">
+                <Edit size={24} className="modal-icon" />
+                <h2>Edit Task</h2>
+              </div>
+              <button className="modal-close" onClick={() => setShowEditModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={updateTask}>
+              <div className="form-section">
+                <div className="form-section-title">Task Details</div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">📝</span>
+                    Title <span className="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={editForm.title}
+                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                    placeholder="Enter task title"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">📄</span>
+                    Description
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                    placeholder="Enter task description"
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
+                <div className="form-section-title">Task Properties</div>
+
+                <div className="form-row-2">
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">🚩</span>
+                      Priority
+                    </label>
+                    <select
+                      className="form-select"
+                      value={editForm.priority}
+                      onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">📅</span>
+                      Due Date
+                    </label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={editForm.due_date}
+                      onChange={(e) => setEditForm({ ...editForm, due_date: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setShowEditModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="submit-btn">
+                  <Edit size={18} />
+                  Save Changes
                 </button>
               </div>
             </form>
