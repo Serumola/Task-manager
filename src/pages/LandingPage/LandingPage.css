@@ -77,10 +77,12 @@ section {
   background: var(--green-600);
   color: var(--white) !important;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
 }
 
 .nav-sign-up:hover {
   background: var(--green-700);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
 .nav-right {
