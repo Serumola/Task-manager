@@ -109,10 +109,9 @@ export default function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={`menu-item ${isActive(item.path) ? "active" : ""}`}
-                  title={collapsed ? item.label : ''}
                 >
                   <item.icon size={20} />
-                  {!collapsed && <span>{item.label}</span>}
+                  <span>{item.label}</span>
                 </Link>
               ))}
             </nav>

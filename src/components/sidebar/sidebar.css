@@ -107,11 +107,6 @@
   justify-content: flex-start;
 }
 
-.sidebar-container.collapsed .menu-item {
-  justify-content: center;
-  padding: 12px;
-}
-
 .menu-item:hover {
   background-color: var(--green-800);
   color: var(--white);
@@ -205,28 +200,9 @@
   color: var(--error-red);
 }
 
-.sidebar-container:not(.collapsed) .user-info {
-  display: block !important;
-}
-
-.sidebar-container:not(.collapsed) .user-profile {
-  justify-content: flex-start;
-}
-
-.sidebar-container:not(.collapsed) .logout-btn {
-  display: flex;
-  position: static;
-  transform: none;
-}
-
 /* Hide search bar */
 .sidebar-search {
   display: none !important;
-}
-
-/* Remove collapsed state styles */
-.sidebar-container.collapsed {
-  display: none;
 }
 
 /* Mobile Top Navbar */
