@@ -1,3 +1,4 @@
+import express from 'express';
 import bcrypt from 'bcryptjs';
 import { getPool } from '../db.js';
 import { generateToken, verifyToken } from '../middleware/auth.js';

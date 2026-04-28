@@ -5,10 +5,10 @@ const { Pool } = pkg;
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
+  connectionString: process.env.DATABASE_URL || process.env.DB_HOST,
+  ssl: process.env.NODE_ENV === 'production' ? {
     rejectUnauthorized: false,
-  },
+  } : false,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
@@ -38,12 +38,27 @@ export async function initDatabase() {
 
     console.log('Connected to PostgreSQL database');
 
+    // Check if tables already exist
+    const tableCheck = await client.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `);
 
+    const tablesExist = tableCheck.rows[0].exists;
 
+    if (tablesExist) {
+      console.log('Tables already exist, skipping creation');
+      client.release();
+      isInitialized = true;
+      return;
+    }
 
     // Create users table
     await client.query(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -51,12 +66,12 @@ export async function initDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
-    `); 
+    `);
     console.log('Created table: users');
 
     // Create tasks table
     await client.query(`
-      CREATE TABLE tasks (
+      CREATE TABLE IF NOT EXISTS tasks (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(500) NOT NULL,
@@ -73,7 +88,7 @@ export async function initDatabase() {
 
     // Create projects table
     await client.query(`
-      CREATE TABLE projects (
+      CREATE TABLE IF NOT EXISTS projects (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         name VARCHAR(255) NOT NULL,
@@ -87,7 +102,7 @@ export async function initDatabase() {
 
     // Create task_projects junction table
     await client.query(`
-      CREATE TABLE task_projects (
+      CREATE TABLE IF NOT EXISTS task_projects (
         task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
         project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
         PRIMARY KEY (task_id, project_id)
@@ -97,7 +112,7 @@ export async function initDatabase() {
 
     // Create task_history table
     await client.query(`
-      CREATE TABLE task_history (
+      CREATE TABLE IF NOT EXISTS task_history (
         id SERIAL PRIMARY KEY,
         task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -111,7 +126,7 @@ export async function initDatabase() {
 
     // Create notifications table
     await client.query(`
-      CREATE TABLE notifications (
+      CREATE TABLE IF NOT EXISTS notifications (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
