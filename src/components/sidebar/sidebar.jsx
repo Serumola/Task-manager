@@ -112,9 +112,10 @@ export default function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={`menu-item ${isActive(item.path) ? "active" : ""}`}
+                  title={collapsed ? item.label : ''}
                 >
-                  <item.icon />
-                  {!collapsed && item.label}
+                  <item.icon size={20} />
+                  {!collapsed && <span>{item.label}</span>}
                 </Link>
               ))}
             </nav>
@@ -128,9 +129,10 @@ export default function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={`menu-item ${isActive(item.path) ? "active" : ""}`}
+                  title={collapsed ? item.label : ''}
                 >
-                  <item.icon />
-                  {!collapsed && item.label}
+                  <item.icon size={20} />
+                  {!collapsed && <span>{item.label}</span>}
                 </Link>
               ))}
             </nav>
@@ -149,15 +151,15 @@ export default function Sidebar() {
                   <p className="user-name">{user?.name || 'User'}</p>
                   <p className="user-email">{user?.email || ''}</p>
                 </div>
-                <button
-                  className="logout-btn"
-                  onClick={handleLogout}
-                  title="Logout"
-                >
-                  <LogOut size={18} />
-                </button>
               </>
             )}
+            <button
+              className="logout-btn"
+              onClick={handleLogout}
+              title="Logout"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
       </aside>

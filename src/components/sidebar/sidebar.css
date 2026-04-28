@@ -121,6 +121,12 @@
   transition: all 0.2s;
   border-left: 3px solid transparent;
   white-space: nowrap;
+  justify-content: flex-start;
+}
+
+.sidebar-container.collapsed .menu-item {
+  justify-content: center;
+  padding: 12px;
 }
 
 .menu-item:hover {
@@ -212,12 +218,7 @@
 .sidebar-container.collapsed .sidebar-title,
 .sidebar-container.collapsed .section-label,
 .sidebar-container.collapsed .sidebar-search input,
-.sidebar-container.collapsed .user-info,
-.sidebar-container.collapsed .sidebar-content {
-  display: none;
-}
-
-.sidebar-container.collapsed .sidebar-menu {
+.sidebar-container.collapsed .user-info {
   display: none;
 }
 
@@ -227,10 +228,19 @@
 
 .sidebar-container.collapsed .user-profile {
   justify-content: center;
+  position: relative;
+}
+
+.sidebar-container.collapsed .user-avatar {
+  margin: 0;
 }
 
 .sidebar-container.collapsed .logout-btn {
-  display: none;
+  display: flex;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Mobile Top Navbar */

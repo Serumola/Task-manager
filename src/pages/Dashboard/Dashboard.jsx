@@ -37,10 +37,52 @@ export default function Dashboard() {
         tasksAPI.getAll(),
         reportsAPI.getDashboard()
       ]);
-      setTaskList(tasksData.tasks);
-      setStats(reportsData.stats);
+      const tasks = tasksData.tasks || [];
+      setTaskList(tasks);
+      
+      // Calculate stats from actual tasks if API doesn't provide them
+      const calculatedStats = {
+        totalTasks: tasks.length,
+        completedTasks: tasks.filter(t => t.status === 'completed').length,
+        pendingTasks: tasks.filter(t => t.status !== 'completed').length,
+        completionRate: tasks.length > 0 ? Math.round((tasks.filter(t => t.status === 'completed').length / tasks.length) * 100) : 0,
+        tasksDueToday: tasks.filter(t => {
+          if (!t.due_date) return false;
+          const due = new Date(t.due_date);
+          return due.toDateString() === new Date().toDateString();
+        }).length,
+        overdueTasks: tasks.filter(t => {
+          if (!t.due_date || t.status === 'completed') return false;
+          return new Date(t.due_date) < new Date();
+        }).length,
+        totalProjects: reportsData.stats?.totalProjects || 0,
+        priorityBreakdown: {
+          high: tasks.filter(t => t.priority === 'high').length,
+          medium: tasks.filter(t => t.priority === 'medium').length,
+          low: tasks.filter(t => t.priority === 'low').length
+        },
+        statusBreakdown: {
+          pending: tasks.filter(t => t.status === 'pending').length,
+          in_progress: tasks.filter(t => t.status === 'in_progress').length,
+          completed: tasks.filter(t => t.status === 'completed').length
+        }
+      };
+      
+      setStats(calculatedStats);
     } catch (err) {
-      console.error("Failed to fetch dashboard data");
+      console.error("Failed to fetch dashboard data", err);
+      // Set default empty stats
+      setStats({
+        totalTasks: 0,
+        completedTasks: 0,
+        pendingTasks: 0,
+        completionRate: 0,
+        tasksDueToday: 0,
+        overdueTasks: 0,
+        totalProjects: 0,
+        priorityBreakdown: { high: 0, medium: 0, low: 0 },
+        statusBreakdown: { pending: 0, in_progress: 0, completed: 0 }
+      });
     } finally {
       setLoading(false);
     }
