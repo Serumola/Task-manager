@@ -149,10 +149,6 @@ export default function Dashboard() {
     );
   }
 
-  const doneCount = stats?.completedTasks || 0;
-  const pendingCount = stats?.pendingTasks || 0;
-  const totalCount = stats?.totalTasks || taskList.length;
-  const completionRate = stats?.completionRate || 0;
   const priorityData = stats?.priorityBreakdown || { high: 0, medium: 0, low: 0 };
   const statusData = stats?.statusBreakdown || { pending: 0, in_progress: 0, completed: 0 };
 
@@ -184,37 +180,6 @@ export default function Dashboard() {
 
         {stats && (
           <>
-            <div className="stats-row">
-              <div className="stat-card total-tasks">
-                <div className="stat-header">
-                  <h3>Total Tasks</h3>
-                  <BarChart3 size={20} className="stat-icon" />
-                </div>
-                <p className="stat-number">{totalCount}</p>
-              </div>
-              <div className="stat-card done-tasks">
-                <div className="stat-header">
-                  <h3>Completed</h3>
-                  <CheckCircle size={20} className="stat-icon" />
-                </div>
-                <p className="stat-number">{doneCount}</p>
-              </div>
-              <div className="stat-card pending-tasks">
-                <div className="stat-header">
-                  <h3>Pending</h3>
-                  <Clock size={20} className="stat-icon" />
-                </div>
-                <p className="stat-number">{pendingCount}</p>
-              </div>
-              <div className="stat-card completion-rate">
-                <div className="stat-header">
-                  <h3>Completion Rate</h3>
-                  <PieChart size={20} className="stat-icon" />
-                </div>
-                <p className="stat-number">{completionRate}%</p>
-              </div>
-            </div>
-
             {/* Charts Section */}
             <div className="charts-grid">
               {/* Priority Distribution - Pie Chart */}
