@@ -6,15 +6,9 @@
 
 .reports-content {
   flex: 1;
-  padding: var(--page-padding);
+  padding: 40px;
   overflow-y: auto;
   margin-left: 260px;
-  transition: margin-left 0.3s ease;
-}
-
-.sidebar-collapsed .reports-content {
-  margin-left: 80px;
-  padding: 40px;
 }
 
 .reports-header {

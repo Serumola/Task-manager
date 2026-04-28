@@ -5,16 +5,7 @@
 }
 
 .projects-content {
-  flex: 1;
-  padding: var(--page-padding);
-  overflow-y: auto;
-  margin-left: 260px;
-  transition: margin-left 0.3s ease;
-}
-
-.sidebar-collapsed .projects-content {
-  margin-left: 80px;
-  padding: 40px;
+  display: none;
 }
 
 .projects-header {

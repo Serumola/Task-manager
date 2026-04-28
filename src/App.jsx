@@ -13,7 +13,6 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Notifications from "./pages/Notifications/Notifications";
 import MyTasks from "./pages/MyTasks/MyTasks";
 import Calendar from "./pages/Calendar/Calendar";
-import Projects from "./pages/Projects/Projects";
 import Reports from "./pages/Reports/Reports";
 import Help from "./pages/Help/Help";
 import Settings from "./pages/Settings/Settings";
@@ -46,11 +45,6 @@ function App() {
         <Route path="/calendar" element={
           <ProtectedRoute>
             <Calendar />
-          </ProtectedRoute>
-        } />
-        <Route path="/projects" element={
-          <ProtectedRoute>
-            <Projects />
           </ProtectedRoute>
         } />
         <Route path="/reports" element={

@@ -5,13 +5,9 @@ import {
   Bell,
   CheckSquare,
   Calendar,
-  Folder,
   BarChart,
   HelpCircle,
   Settings,
-  Search,
-  ChevronLeft,
-  ChevronRight,
   LogOut,
   User,
   Menu,
@@ -21,7 +17,6 @@ import { useAuth } from "../../context/AuthContext";
 import "./sidebar.css";
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,7 +27,6 @@ export default function Sidebar() {
     { icon: Bell, label: "Notifications", path: "/notifications" },
     { icon: CheckSquare, label: "My Tasks", path: "/my-tasks" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
-    { icon: Folder, label: "Projects", path: "/projects" },
     { icon: BarChart, label: "Reports", path: "/reports" },
   ];
 
@@ -78,20 +72,13 @@ export default function Sidebar() {
       />
 
       {/* Desktop Sidebar */}
-      <aside className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
+      <aside className="sidebar-container">
         {/* HEADER */}
         <div className="sidebar-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span className="sidebar-logo">🟨</span>
-            {!collapsed && <h2 className="sidebar-title">Task Manager</h2>}
+            <h2 className="sidebar-title">Task Manager</h2>
           </div>
-          <button
-            className="collapse-btn"
-            onClick={() => setCollapsed(!collapsed)}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-          </button>
         </div>
 
         {/* SEARCH */}
@@ -99,24 +86,23 @@ export default function Sidebar() {
         {/* MENU CONTENT */}
         <div className="sidebar-content">
           <div className="sidebar-section">
-            {!collapsed && <p className="section-label">GENERAL</p>}
+            <p className="section-label">GENERAL</p>
             <nav className="sidebar-menu">
               {menuItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   className={`menu-item ${isActive(item.path) ? "active" : ""}`}
-                  title={collapsed ? item.label : ''}
                 >
                   <item.icon size={20} />
-                  {!collapsed && <span>{item.label}</span>}
+                  <span>{item.label}</span>
                 </Link>
               ))}
             </nav>
           </div>
 
           <div className="sidebar-section">
-            {!collapsed && <p className="section-label">OTHERS</p>}
+            <p className="section-label">OTHERS</p>
             <nav className="sidebar-menu">
               {otherItems.map((item) => (
                 <Link

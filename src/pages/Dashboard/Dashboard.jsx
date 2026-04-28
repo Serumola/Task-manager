@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
-import { tasksAPI, reportsAPI, projectsAPI } from "../../services/api";
+import { tasksAPI, reportsAPI } from "../../services/api";
 import { Plus, Trash2, CheckCircle, Circle, Calendar, Flag, Clock, AlertCircle, BarChart3, PieChart } from "lucide-react";
 import "./Dashboard.css";
 
@@ -14,10 +14,8 @@ export default function Dashboard() {
     title: "",
     description: "",
     priority: "medium",
-    due_date: "",
-    project_id: ""
+    due_date: ""
   });
-  const [projects, setProjects] = useState([]);
 
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -27,7 +25,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
-    fetchProjects();
   }, []);
 
   async function fetchDashboardData() {
@@ -55,7 +52,6 @@ export default function Dashboard() {
           if (!t.due_date || t.status === 'completed') return false;
           return new Date(t.due_date) < new Date();
         }).length,
-        totalProjects: reportsData.stats?.totalProjects || 0,
         priorityBreakdown: {
           high: tasks.filter(t => t.priority === 'high').length,
           medium: tasks.filter(t => t.priority === 'medium').length,
@@ -79,22 +75,11 @@ export default function Dashboard() {
         completionRate: 0,
         tasksDueToday: 0,
         overdueTasks: 0,
-        totalProjects: 0,
         priorityBreakdown: { high: 0, medium: 0, low: 0 },
         statusBreakdown: { pending: 0, in_progress: 0, completed: 0 }
       });
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function fetchProjects() {
-    try {
-      const data = await projectsAPI.getAll();
-      setProjects(data.projects || []);
-    } catch (err) {
-      console.error("Failed to fetch projects");
-      setProjects([]);
     }
   }
 
@@ -107,10 +92,9 @@ export default function Dashboard() {
         title: newTask.title.trim(),
         description: newTask.description.trim(),
         priority: newTask.priority,
-        due_date: newTask.due_date || null,
-        project_ids: newTask.project_id ? [parseInt(newTask.project_id)] : []
+        due_date: newTask.due_date || null
       });
-      setNewTask({ title: "", description: "", priority: "medium", due_date: "", project_id: "" });
+      setNewTask({ title: "", description: "", priority: "medium", due_date: "" });
       setShowAddModal(false);
       fetchDashboardData();
     } catch (err) {
@@ -331,15 +315,6 @@ export default function Dashboard() {
                       <span className="quick-stat-value">{stats.overdueTasks || 0}</span>
                     </div>
                   </div>
-                  <div className="quick-stat-item">
-                    <div className="quick-stat-icon projects">
-                      <PieChart size={20} />
-                    </div>
-                    <div className="quick-stat-info">
-                      <span className="quick-stat-label">Projects</span>
-                      <span className="quick-stat-value">{stats.totalProjects || 0}</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -500,23 +475,6 @@ export default function Dashboard() {
                       onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })}
                       min={new Date().toISOString().split('T')[0]}
                     />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon">📁</span>
-                      Project
-                    </label>
-                    <select
-                      className="form-select"
-                      value={newTask.project_id}
-                      onChange={(e) => setNewTask({ ...newTask, project_id: e.target.value })}
-                    >
-                      <option value="">No Project</option>
-                      {projects.map(p => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                      ))}
-                    </select>
                   </div>
                 </div>
               </div>
