@@ -26,6 +26,7 @@ export default function Login() {
 
     setLoading(true);
     try {
+      console.log("Logging in with:", {email, password});
       await login(email, password);
       navigate("/dashboard");
     } catch (err) {
