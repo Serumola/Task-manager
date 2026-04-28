@@ -27,6 +27,24 @@ router.get('/dashboard', verifyToken, async (req, res) => {
       [req.userId]
     );
 
+    // Tasks by priority
+    const priorityResult = await pool.query(
+      `SELECT priority, COUNT(*) as count 
+       FROM tasks 
+       WHERE user_id = $1 
+       GROUP BY priority`,
+      [req.userId]
+    );
+
+    // Tasks by status (for bar chart)
+    const statusResult = await pool.query(
+      `SELECT status, COUNT(*) as count 
+       FROM tasks 
+       WHERE user_id = $1 
+       GROUP BY status`,
+      [req.userId]
+    );
+
     // Tasks due today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -34,14 +52,14 @@ router.get('/dashboard', verifyToken, async (req, res) => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const dueTodayResult = await pool.query(
-      `SELECT COUNT(*) as count FROM tasks 
+      `SELECT COUNT(*) as count FROM tasks
        WHERE user_id = $1 AND due_date >= $2 AND due_date < $3`,
       [req.userId, today.toISOString(), tomorrow.toISOString()]
     );
 
     // Overdue tasks
     const overdueResult = await pool.query(
-      `SELECT COUNT(*) as count FROM tasks 
+      `SELECT COUNT(*) as count FROM tasks
        WHERE user_id = $1 AND due_date < $2 AND status != 'completed'`,
       [req.userId, today.toISOString()]
     );
@@ -57,6 +75,26 @@ router.get('/dashboard', verifyToken, async (req, res) => {
     const pending = parseInt(pendingResult.rows[0].count);
     const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
+    // Build priority breakdown
+    const priorityBreakdown = {
+      high: 0,
+      medium: 0,
+      low: 0
+    };
+    priorityResult.rows.forEach(row => {
+      priorityBreakdown[row.priority] = parseInt(row.count);
+    });
+
+    // Build status breakdown for bar chart
+    const statusBreakdown = {
+      pending: 0,
+      in_progress: 0,
+      completed: 0
+    };
+    statusResult.rows.forEach(row => {
+      statusBreakdown[row.status] = parseInt(row.count);
+    });
+
     res.json({
       stats: {
         totalTasks: total,
@@ -65,7 +103,9 @@ router.get('/dashboard', verifyToken, async (req, res) => {
         completionRate,
         tasksDueToday: parseInt(dueTodayResult.rows[0].count),
         overdueTasks: parseInt(overdueResult.rows[0].count),
-        totalProjects: parseInt(projectsResult.rows[0].count)
+        totalProjects: parseInt(projectsResult.rows[0].count),
+        priorityBreakdown,
+        statusBreakdown
       }
     });
   } catch (error) {

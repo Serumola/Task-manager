@@ -18,7 +18,7 @@ const allowedOrigins = [
   'https://task-manager-kh55.onrender.com',
   'https://task-manager-gamma-seven-55.vercel.app',
   'https://task-manager-5go8fntdi-serumolas-projects.vercel.app',
-  //'http://localhost:5173',
+  'http://localhost:5175',
   //'http://localhost:3000'
 ];
 

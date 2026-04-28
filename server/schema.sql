@@ -1,8 +1,3 @@
--- Task Manager Database Schema for PostgreSQL
--- This schema is automatically applied when the server starts
-
--- Tables are created in db.js using the initDatabase() function
--- This file is for reference only
 
 -- Users table
 CREATE TABLE users (
