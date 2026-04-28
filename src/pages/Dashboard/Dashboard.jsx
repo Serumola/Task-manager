@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import { tasksAPI, reportsAPI } from "../../services/api";
 import { Plus, Trash2, CheckCircle, Circle, Calendar, Flag, Clock, AlertCircle, BarChart3, PieChart } from "lucide-react";
+import { useToast } from "../../context/ToastContext";
 import "./Dashboard.css";
 
 export default function Dashboard() {
+  const toast = useToast();
   const [taskInput, setTaskInput] = useState("");
   const [taskList, setTaskList] = useState([]);
   const [stats, setStats] = useState(null);
@@ -94,11 +96,12 @@ export default function Dashboard() {
         priority: newTask.priority,
         due_date: newTask.due_date || null
       });
+      toast.success("Task created successfully!");
       setNewTask({ title: "", description: "", priority: "medium", due_date: "" });
       setShowAddModal(false);
       fetchDashboardData();
     } catch (err) {
-      console.error("Failed to add task");
+      toast.error("Failed to create task");
     }
   }
 
@@ -106,24 +109,26 @@ export default function Dashboard() {
     try {
       const newStatus = currentStatus === "completed" ? "pending" : "completed";
       await tasksAPI.update(id, { status: newStatus });
+      toast.success(newStatus === "completed" ? "Task completed! 🎉" : "Task marked as pending");
       // Update local state immediately for better UX
-      setTaskList(taskList.map(task => 
+      setTaskList(taskList.map(task =>
         task.id === id ? { ...task, status: newStatus } : task
       ));
       // Then refresh dashboard data
       fetchDashboardData();
     } catch (err) {
-      console.error("Failed to update task", err);
+      toast.error("Failed to update task");
     }
   }
 
   async function deleteTask(id) {
     try {
       await tasksAPI.delete(id);
+      toast.success("Task deleted");
       setTaskList(taskList.filter(task => task.id !== id));
       fetchDashboardData();
     } catch (err) {
-      console.error("Failed to delete task");
+      toast.error("Failed to delete task");
     }
   }
 
