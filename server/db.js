@@ -38,16 +38,8 @@ export async function initDatabase() {
 
     console.log('Connected to PostgreSQL database');
 
-    // Drop tables if they exist (in correct order due to foreign keys)
-    await client.query(`
-      DROP TABLE IF EXISTS task_projects CASCADE;
-      DROP TABLE IF EXISTS task_history CASCADE;
-      DROP TABLE IF EXISTS notifications CASCADE;
-      DROP TABLE IF EXISTS tasks CASCADE;
-      DROP TABLE IF EXISTS projects CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
-    `);
-    console.log('Dropped existing tables');
+
+
 
     // Create users table
     await client.query(`
