@@ -138,18 +138,58 @@ router.put('/:id', verifyToken, async (req, res) => {
       }
     }
 
+    // Build dynamic update query - only update fields that are provided
+    const updates = [];
+    const values = [];
+    let paramCount = 1;
+
+    if (title !== undefined && title !== null) {
+      updates.push(`title = $${paramCount}`);
+      values.push(title);
+      paramCount++;
+    }
+    if (description !== undefined) {
+      updates.push(`description = $${paramCount}`);
+      values.push(description);
+      paramCount++;
+    }
+    if (status !== undefined && status !== null) {
+      updates.push(`status = $${paramCount}`);
+      values.push(status);
+      paramCount++;
+    }
+    if (priority !== undefined && priority !== null) {
+      updates.push(`priority = $${paramCount}`);
+      values.push(priority);
+      paramCount++;
+    }
+    if (due_date !== undefined) {
+      updates.push(`due_date = $${paramCount}`);
+      values.push(due_date);
+      paramCount++;
+    }
+    
+    // Always update completed_at and updated_at
+    updates.push(`completed_at = $${paramCount}`);
+    values.push(completed_at);
+    paramCount++;
+    
+    updates.push(`updated_at = CURRENT_TIMESTAMP`);
+
+    if (updates.length === 2) {
+      // Only completed_at and updated_at - no fields to update
+      return res.json({ task: oldTask, message: 'No changes made' });
+    }
+
+    values.push(req.params.id);
+    values.push(req.userId);
+
     const result = await pool.query(
       `UPDATE tasks
-       SET title = COALESCE($1, title), 
-           description = COALESCE($2, description), 
-           status = COALESCE($3, status), 
-           priority = COALESCE($4, priority), 
-           due_date = COALESCE($5, due_date), 
-           completed_at = $6, 
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $7 AND user_id = $8
+       SET ${updates.join(', ')}
+       WHERE id = $${paramCount} AND user_id = $${paramCount + 1}
        RETURNING *`,
-      [title || oldTask.title, description !== undefined ? description : oldTask.description, status || oldTask.status, priority || oldTask.priority, due_date || oldTask.due_date, completed_at, req.params.id, req.userId]
+      values
     );
 
     const task = result.rows[0];
