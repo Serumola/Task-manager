@@ -123,19 +123,38 @@ router.put('/:id', verifyToken, async (req, res) => {
     }
 
     const oldTask = oldResult.rows[0];
-    const completed_at = completed ? new Date().toISOString() : null;
+    
+    // Handle completed_at timestamp based on status and completed flag
+    let completed_at = oldTask.completed_at;
+    if (completed !== undefined) {
+      completed_at = completed ? new Date().toISOString() : null;
+    }
+    // Also update completed_at if status changes to/from completed
+    if (status !== undefined) {
+      if (status === 'completed') {
+        completed_at = new Date().toISOString();
+      } else if (oldTask.status === 'completed' && status !== 'completed') {
+        completed_at = null;
+      }
+    }
 
     const result = await pool.query(
-      `UPDATE tasks 
-       SET title = $1, description = $2, status = $3, priority = $4, due_date = $5, completed_at = $6, updated_at = CURRENT_TIMESTAMP
+      `UPDATE tasks
+       SET title = COALESCE($1, title), 
+           description = COALESCE($2, description), 
+           status = COALESCE($3, status), 
+           priority = COALESCE($4, priority), 
+           due_date = COALESCE($5, due_date), 
+           completed_at = $6, 
+           updated_at = CURRENT_TIMESTAMP
        WHERE id = $7 AND user_id = $8
        RETURNING *`,
-      [title, description, status, priority, due_date, completed_at, req.params.id, req.userId]
+      [title || oldTask.title, description !== undefined ? description : oldTask.description, status || oldTask.status, priority || oldTask.priority, due_date || oldTask.due_date, completed_at, req.params.id, req.userId]
     );
 
     const task = result.rows[0];
 
-    // Update project association
+    // Update project association only if project_id is explicitly provided
     if (project_id !== undefined) {
       await pool.query('DELETE FROM task_projects WHERE task_id = $1', [task.id]);
       if (project_id) {
@@ -143,12 +162,16 @@ router.put('/:id', verifyToken, async (req, res) => {
       }
     }
 
-    // Log history
-    await pool.query(
-      `INSERT INTO task_history (task_id, user_id, action, old_value, new_value)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [task.id, req.userId, 'updated', JSON.stringify(oldTask), JSON.stringify(task)]
-    );
+    // Log history (don't fail if history logging fails)
+    try {
+      await pool.query(
+        `INSERT INTO task_history (task_id, user_id, action, old_value, new_value)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [task.id, req.userId, 'updated', JSON.stringify(oldTask), JSON.stringify(task)]
+      );
+    } catch (historyErr) {
+      console.error('Failed to log task history:', historyErr);
+    }
 
     res.json({ task, message: 'Task updated successfully' });
   } catch (error) {

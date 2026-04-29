@@ -191,5 +191,4 @@ router.put('/change-password', verifyToken, async (req, res) => {
   }
 });
 
-import express from 'express';
 export default router;
