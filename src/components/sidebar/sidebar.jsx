@@ -52,8 +52,7 @@ export default function Sidebar() {
       {/* Mobile Top Navbar */}
       <nav className="mobile-navbar">
         <div className="navbar-left">
-          <span className="navbar-logo">🟨</span>
-          <h1 className="navbar-title">Task Manager</h1>
+          <h1 className="navbar-title">Task Master</h1>
         </div>
         <div className="navbar-right">
           <button
