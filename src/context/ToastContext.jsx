@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 import './ToastContext.css';
 
@@ -59,6 +59,13 @@ function Toast({ toast, onClose }) {
   };
 
   const Icon = icons[toast.type] || Info;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
   return (
     <div className={`toast toast-${toast.type}`}>

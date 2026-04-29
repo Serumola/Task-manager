@@ -3,6 +3,7 @@ import Sidebar from "../../components/sidebar/sidebar";
 import { tasksAPI, reportsAPI } from "../../services/api";
 import { Plus, Trash2, CheckCircle, Circle, Calendar, Flag, Clock, AlertCircle, BarChart3, PieChart } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
+import { SkeletonDashboard } from "../../components/SkeletonLoader";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -12,6 +13,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -28,6 +30,13 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => setPageLoaded(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   async function fetchDashboardData() {
     try {
@@ -141,7 +150,7 @@ export default function Dashboard() {
       <div className="dashboard-main-wrapper">
         <Sidebar />
         <div className="dashboard-main-content">
-          <div className="loading-state">Loading dashboard...</div>
+          <SkeletonDashboard />
         </div>
       </div>
     );
@@ -168,7 +177,8 @@ export default function Dashboard() {
       <Sidebar />
 
       <div className="dashboard-main-content">
-        <div className="top-header">
+        <div className={`dashboard-content-wrapper ${pageLoaded ? 'content-loaded' : ''}`}>
+          <div className="top-header content-fade-in">
           <h1 className="page-title">Dashboard</h1>
           <div className="date-box">
             <Calendar size={18} />
@@ -178,6 +188,38 @@ export default function Dashboard() {
 
         {stats && (
           <>
+            {/* Stats Row - Animated */}
+            <div className="stats-row">
+              <div className="stat-card total-tasks stagger-item">
+                <div className="stat-header">
+                  <h3>Total Tasks</h3>
+                  <CheckCircle size={20} className="stat-icon" />
+                </div>
+                <div className="stat-number">{stats.totalTasks || 0}</div>
+              </div>
+              <div className="stat-card done-tasks stagger-item">
+                <div className="stat-header">
+                  <h3>Completed</h3>
+                  <CheckCircle size={20} className="stat-icon" />
+                </div>
+                <div className="stat-number">{stats.completedTasks || 0}</div>
+              </div>
+              <div className="stat-card pending-tasks stagger-item">
+                <div className="stat-header">
+                  <h3>Pending</h3>
+                  <Clock size={20} className="stat-icon" />
+                </div>
+                <div className="stat-number">{stats.pendingTasks || 0}</div>
+              </div>
+              <div className="stat-card completion-rate stagger-item">
+                <div className="stat-header">
+                  <h3>Completion Rate</h3>
+                  <BarChart3 size={20} className="stat-icon" />
+                </div>
+                <div className="stat-number">{stats.completionRate || 0}%</div>
+              </div>
+            </div>
+
             {/* Charts Section */}
             <div className="charts-grid">
               {/* Priority Distribution - Pie Chart */}
@@ -306,7 +348,7 @@ export default function Dashboard() {
                   <AlertCircle size={18} className="chart-icon" />
                 </div>
                 <div className="chart-content quick-stats">
-                  <div className="quick-stat-item">
+                  <div className="quick-stat-item stagger-item">
                     <div className="quick-stat-icon due-today">
                       <Calendar size={20} />
                     </div>
@@ -315,7 +357,7 @@ export default function Dashboard() {
                       <span className="quick-stat-value">{stats.tasksDueToday || 0}</span>
                     </div>
                   </div>
-                  <div className="quick-stat-item">
+                  <div className="quick-stat-item stagger-item">
                     <div className="quick-stat-icon overdue">
                       <AlertCircle size={20} />
                     </div>
@@ -355,12 +397,13 @@ export default function Dashboard() {
         <div className="task-list-section">
           <h2>Recent Tasks</h2>
           {taskList.length === 0 && (
-            <p className="no-tasks-text">No tasks yet. Add one above!</p>
+            <p className="no-tasks-text content-fade-in">No tasks yet. Add one above!</p>
           )}
-          {taskList.slice(0, 5).map((task) => (
+          {taskList.slice(0, 5).map((task, index) => (
             <div
               key={task.id}
-              className={`task-item ${task.status === "completed" ? "task-done" : ""}`}
+              className={`task-item ${task.status === "completed" ? "task-done" : ""} stagger-item`}
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="task-left">
                 <button
@@ -383,6 +426,7 @@ export default function Dashboard() {
               </button>
             </div>
           ))}
+        </div>
         </div>
       </div>
 
