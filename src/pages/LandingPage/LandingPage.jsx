@@ -1,9 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check, Pencil, SlidersHorizontal, Sparkles, Mail, Phone } from 'lucide-react'
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import './LandingPage.css'
 import TiltedCard from '../../components/tilted-cards'
+
+// Animation hook for fade-in on scroll
+function useFadeInOnScroll() {
+  const ref = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  return [ref, isVisible]
+}
 
 
 function Navbar() {
@@ -35,23 +61,25 @@ function Navbar() {
 }
 
 function Home() {
+  const [ref, isVisible] = useFadeInOnScroll()
+
   return (
     <section id='Home' className="hero-section" aria-label="Hero section">
-      <div className="home">
-        <div className="home-content">
-          <h1>TaskMaster</h1>
-          <h2>Stay Organized. Get Things Done.</h2>
-          <h3>Manage your tasks, track your progress, and boost your productivity — all in one place</h3>
-          <Link to="/signup" className="cta-button" aria-label="Get started with TaskMaster">
+      <div className={`home ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+        <div className="home-content animate-slide-up">
+          <h1 className="animate-title">TaskMaster</h1>
+          <h2 className="animate-subtitle">Stay Organized. Get Things Done.</h2>
+          <h3 className="animate-description">Manage your tasks, track your progress, and boost your productivity — all in one place</h3>
+          <Link to="/signup" className="cta-button animate-cta" aria-label="Get started with TaskMaster">
             Get Started
             <ArrowRight className="arrow-icon" aria-hidden="true" />
           </Link>
-          <p className='cta-content'>No credit card. No clutter. Just clarity.</p>
+          <p className='cta-content animate-cta-content'>No credit card. No clutter. Just clarity.</p>
         </div>
-        <div className="home-image">
-          <img 
-            src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFza3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" 
-            alt="Task Management Dashboard - Organize and track your tasks efficiently" 
+        <div className="home-image animate-image">
+          <img
+            src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFza3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60"
+            alt="Task Management Dashboard - Organize and track your tasks efficiently"
             loading="lazy"
             width="400"
             height="300"
@@ -63,10 +91,12 @@ function Home() {
 }
 
 function Features() {
+  const [ref, isVisible] = useFadeInOnScroll()
+
   return (
     <section id='Features' className="features-section" aria-label="Features section">
-      <div className="features">
-        <header>
+      <div className={`features ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+        <header className="animate-header">
           <h1>Features</h1>
           <p>Discover the powerful features of our task manager!</p>
         </header>
@@ -102,25 +132,27 @@ function Features() {
 }
 
 function HowItWorks() {
+  const [ref, isVisible] = useFadeInOnScroll()
+
   return (
     <section className="how-it-works-section" aria-label="How It Works section">
-      <div className="how-it-works">
-        <header>
+      <div className={`how-it-works ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+        <header className="animate-header">
           <h1>How It Works</h1>
           <div className="steps">
             <p>Three Simple Steps to Transform Your Day With Ease</p>
             <div className="step" role="list">
-              <div className="step-card" role="listitem">
+              <div className="step-card step-card-1" role="listitem">
                 <h2>Step 1</h2>
                 <p>Write down your tasks.</p>
                 <Pencil className="step-icon" aria-hidden="true" />
               </div>
-              <div className="step-card" role="listitem">
+              <div className="step-card step-card-2" role="listitem">
                 <h2>Step 2</h2>
                 <p>Prioritize and organize what matters.</p>
                 <SlidersHorizontal className="step-icon" aria-hidden="true" />
               </div>
-              <div className="step-card" role="listitem">
+              <div className="step-card step-card-3" role="listitem">
                 <h2>Step 3</h2>
                 <p>Track progress and celebrate wins.</p>
                 <Sparkles className="step-icon" aria-hidden="true" />
@@ -135,14 +167,16 @@ function HowItWorks() {
 
 
 function Pricing() {
+  const [ref, isVisible] = useFadeInOnScroll()
+
   return (
     <section id='Pricing' className="pricing-section" aria-label="Pricing section">
-      <div className="pricing">
-        <header>
+      <div className={`pricing ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+        <header className="animate-header">
           <h1 className='h1-price'>Simple Plans That Scale With You</h1>
         </header>
         <div className='pricing-grid' role="list">
-          <div className="pricing-card" role="listitem">
+          <div className="pricing-card pricing-card-1" role="listitem">
             <h3>Free Plan</h3>
             <p>Best For Individuals. Getting Started</p>
             <hr aria-hidden="true" />
@@ -156,7 +190,7 @@ function Pricing() {
             </ul>
           </div>
 
-          <div className='pricing-card' role="listitem">
+          <div className='pricing-card pricing-card-2' role="listitem">
             <h3>Focus Plan</h3>
             <p>For individuals who want to stay consistent</p>
             <hr aria-hidden="true" />
@@ -171,7 +205,7 @@ function Pricing() {
             </ul>
           </div>
 
-          <div className='pricing-card pricing-popular' role="listitem" aria-label="Master Plan - Most Popular">
+          <div className='pricing-card pricing-popular pricing-card-3' role="listitem" aria-label="Master Plan - Most Popular">
             <div className="badge">Get 20% OFF this month</div>
             <h3>Master Plan</h3>
             <p>For individuals serious about productivity</p>
@@ -193,12 +227,14 @@ function Pricing() {
 }
 
 function Contact() {
+  const [ref, isVisible] = useFadeInOnScroll()
+
   return (
     <section id='contact' className="contact-section" aria-label="Contact section">
-      <footer className="footer" id="contact">
+      <footer className={`footer ${isVisible ? 'fade-in-visible' : ''}`} id="contact" ref={ref}>
         <div className="footer-container">
 
-          <div className="footer-col">
+          <div className="footer-col animate-footer-col-1">
             <h3 className="logo">TaskMaster</h3>
             <p>
               TaskMaster helps you stay organized, focused, and productive —
@@ -211,7 +247,7 @@ function Contact() {
             </address>
           </div>
 
-          <div className="footer-col">
+          <div className="footer-col animate-footer-col-2">
             <h4>Pages</h4>
             <a href="#home">Home</a>
             <a href="#features">Features</a>
@@ -219,7 +255,7 @@ function Contact() {
             <a href="#contact">Contact</a>
           </div>
 
-          <div className="footer-col">
+          <div className="footer-col animate-footer-col-3">
             <h4>Support</h4>
             <a href="#">Help Center</a>
             <a href="#">FAQs</a>
@@ -227,7 +263,7 @@ function Contact() {
             <a href="#">Terms</a>
           </div>
 
-          <div className="footer-col">
+          <div className="footer-col animate-footer-col-4">
             <h4>Contact</h4>
 
             <div className="socials" role="list" aria-label="Social media links">

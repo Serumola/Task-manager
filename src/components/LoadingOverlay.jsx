@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import './LoadingOverlay.css';
 
-export default function LoadingOverlay({ show, text = 'Loading...' }) {
+export default function LoadingOverlay({ show, text = '' }) {
   if (!show) return null;
 
   return (
@@ -30,7 +30,6 @@ export default function LoadingOverlay({ show, text = 'Loading...' }) {
           </div>
         </div>
         <h1 className="loading-title">Task Manager</h1>
-        <p className="loading-text">{text}</p>
         <div className="loading-progress">
           <div className="loading-progress-bar"></div>
         </div>

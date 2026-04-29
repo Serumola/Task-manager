@@ -18,6 +18,123 @@ section {
   width: 100%;
 }
 
+/* Fade In Animation on Scroll */
+.fade-in-visible {
+  animation: sectionFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Home Section Animations */
+.home-content {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-title {
+  animation: titleGlow 1.2s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.3s;
+}
+
+@keyframes titleGlow {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.animate-subtitle {
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.5s;
+}
+
+.animate-description {
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.6s;
+}
+
+.animate-cta {
+  animation: ctaPulse 2s ease-in-out infinite, slideUp 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.7s, 0.7s;
+}
+
+@keyframes ctaPulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+  }
+  50% {
+    box-shadow: 0 12px 32px rgba(5, 150, 105, 0.5);
+  }
+}
+
+.animate-cta-content {
+  animation: fadeIn 1s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.9s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-image {
+  animation: imageFloat 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, imageHover 6s ease-in-out infinite;
+  opacity: 0;
+  animation-delay: 0.4s, 0.4s;
+}
+
+@keyframes imageFloat {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes imageHover {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 /* NAVBAR */
 
 .navbar {
@@ -217,21 +334,29 @@ section {
   background: linear-gradient(180deg, var(--white) 0%, var(--green-50) 100%);
 }
 
-.features h1 {
+.features.animate-header h1,
+.features.animate-header p {
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.features.animate-header h1 {
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 15px;
   color: var(--gray-900);
   letter-spacing: -1px;
+  animation-delay: 0.2s;
 }
 
-.features > p {
+.features.animate-header p {
   font-size: 18px;
   color: var(--gray-600);
   margin-bottom: 60px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  animation-delay: 0.3s;
 }
 
 .features-container {
@@ -242,6 +367,42 @@ section {
   margin: 0 auto;
 }
 
+/* Stagger animation for feature cards */
+.features-container > *:nth-child(1) {
+  animation: cardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.4s;
+}
+
+.features-container > *:nth-child(2) {
+  animation: cardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.5s;
+}
+
+.features-container > *:nth-child(3) {
+  animation: cardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.6s;
+}
+
+.features-container > *:nth-child(4) {
+  animation: cardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.7s;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* HOW IT WORKS */
 
 .how-it-works-section {
@@ -249,17 +410,35 @@ section {
   padding: 100px 50px;
 }
 
-.how-it-works {
-  max-width: 1200px;
-  margin: 0 auto;
+.how-it-works.animate-header h1,
+.how-it-works.animate-header > div > p {
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
 }
 
-.how-it-works > div > h1 {
+.how-it-works.animate-header h1 {
   font-size: 42px;
   font-weight: 800;
   margin-bottom: 15px;
   text-align: center;
   color: var(--white);
+  animation-delay: 0.2s;
+}
+
+.how-it-works.animate-header > div > p {
+  font-size: 18px;
+  color: var(--green-300);
+  margin-bottom: 60px;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  animation-delay: 0.3s;
+}
+
+.how-it-works {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .steps > p {
@@ -282,6 +461,36 @@ section {
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   justify-items: center;
+}
+
+/* Step cards stagger animation */
+.step-card-1 {
+  animation: stepSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.4s;
+}
+
+.step-card-2 {
+  animation: stepSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.6s;
+}
+
+.step-card-3 {
+  animation: stepSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.8s;
+}
+
+@keyframes stepSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .step-card {
@@ -341,6 +550,12 @@ section {
   text-align: center;
 }
 
+.pricing.animate-header h1 {
+  animation: slideUp 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
 .h1-price {
   font-size: 48px;
   font-weight: 800;
@@ -355,6 +570,36 @@ section {
   gap: 35px;
   max-width: 1100px;
   margin: 0 auto;
+}
+
+/* Pricing cards stagger animation */
+.pricing-card-1 {
+  animation: pricingSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.4s;
+}
+
+.pricing-card-2 {
+  animation: pricingSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.6s;
+}
+
+.pricing-card-3 {
+  animation: pricingSlideIn 0.8s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.8s;
+}
+
+@keyframes pricingSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .pricing-card {
@@ -481,6 +726,30 @@ section {
   background: linear-gradient(180deg, var(--gray-900) 0%, var(--green-900) 100%);
   padding: 80px 50px 30px;
   color: var(--gray-300);
+}
+
+.footer.animate-footer-col-1,
+.footer.animate-footer-col-2,
+.footer.animate-footer-col-3,
+.footer.animate-footer-col-4 {
+  animation: footerFadeIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.footer.animate-footer-col-1 { animation-delay: 0.3s; }
+.footer.animate-footer-col-2 { animation-delay: 0.5s; }
+.footer.animate-footer-col-3 { animation-delay: 0.7s; }
+.footer.animate-footer-col-4 { animation-delay: 0.9s; }
+
+@keyframes footerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .footer-container {

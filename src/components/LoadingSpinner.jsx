@@ -1,6 +1,6 @@
 import './LoadingSpinner.css';
 
-export default function LoadingSpinner({ size = 'medium', text = 'Loading...' }) {
+export default function LoadingSpinner({ size = 'medium' }) {
   return (
     <div className="loading-spinner-container">
       <div className={`loading-spinner ${size}`}>
@@ -8,7 +8,6 @@ export default function LoadingSpinner({ size = 'medium', text = 'Loading...' })
         <div className="spinner-ring"></div>
         <div className="spinner-ring"></div>
       </div>
-      {text && <p className="loading-text">{text}</p>}
     </div>
   );
 }
