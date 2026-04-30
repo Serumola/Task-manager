@@ -18,7 +18,7 @@ section {
   width: 100%;
 }
 
-/* Fade In Animation on Scroll */
+/* Base fade-in-visible for sections */
 .fade-in-visible {
   animation: sectionFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -32,6 +32,19 @@ section {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Animate Element - triggered by .visible class */
+.animate-element {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-element.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Home Section Animations */
@@ -336,8 +349,16 @@ section {
 
 .features.animate-header h1,
 .features.animate-header p {
-  animation: slideUp 0.8s ease-out forwards;
   opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.features.animate-header h1.visible,
+.features.animate-header p.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .features.animate-header h1 {
@@ -346,7 +367,6 @@ section {
   margin-bottom: 15px;
   color: var(--gray-900);
   letter-spacing: -1px;
-  animation-delay: 0.2s;
 }
 
 .features.animate-header p {
@@ -356,7 +376,6 @@ section {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  animation-delay: 0.3s;
 }
 
 .features-container {
@@ -367,40 +386,18 @@ section {
   margin: 0 auto;
 }
 
-/* Stagger animation for feature cards */
-.features-container > *:nth-child(1) {
-  animation: cardFadeIn 0.6s ease-out forwards;
+/* Feature cards - animated via useStaggerAnimation hook */
+.features-container > * {
   opacity: 0;
-  animation-delay: 0.4s;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.features-container > *:nth-child(2) {
-  animation: cardFadeIn 0.6s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.5s;
-}
-
-.features-container > *:nth-child(3) {
-  animation: cardFadeIn 0.6s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.6s;
-}
-
-.features-container > *:nth-child(4) {
-  animation: cardFadeIn 0.6s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.7s;
-}
-
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.features-container > *.visible,
+.features-container > * .visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 /* HOW IT WORKS */
@@ -412,8 +409,21 @@ section {
 
 .how-it-works.animate-header h1,
 .how-it-works.animate-header > div > p {
-  animation: slideUp 0.8s ease-out forwards;
   opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.how-it-works.animate-header h1.visible,
+.how-it-works.animate-header > div > p.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.how-it-works {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .how-it-works.animate-header h1 {
@@ -422,23 +432,6 @@ section {
   margin-bottom: 15px;
   text-align: center;
   color: var(--white);
-  animation-delay: 0.2s;
-}
-
-.how-it-works.animate-header > div > p {
-  font-size: 18px;
-  color: var(--green-300);
-  margin-bottom: 60px;
-  text-align: center;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  animation-delay: 0.3s;
-}
-
-.how-it-works {
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .steps > p {
@@ -463,34 +456,17 @@ section {
   justify-items: center;
 }
 
-/* Step cards stagger animation */
-.step-card-1 {
-  animation: stepSlideIn 0.8s ease-out forwards;
+/* Step cards - animated via useStaggerAnimation hook */
+.step-card {
   opacity: 0;
-  animation-delay: 0.4s;
+  transform: translateY(50px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.step-card-2 {
-  animation: stepSlideIn 0.8s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.6s;
-}
-
-.step-card-3 {
-  animation: stepSlideIn 0.8s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.8s;
-}
-
-@keyframes stepSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.step-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .step-card {
@@ -551,9 +527,15 @@ section {
 }
 
 .pricing.animate-header h1 {
-  animation: slideUp 0.8s ease-out forwards;
   opacity: 0;
-  animation-delay: 0.2s;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pricing.animate-header h1.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .h1-price {
@@ -572,34 +554,17 @@ section {
   margin: 0 auto;
 }
 
-/* Pricing cards stagger animation */
-.pricing-card-1 {
-  animation: pricingSlideIn 0.8s ease-out forwards;
+/* Pricing cards - animated via useStaggerAnimation hook */
+.pricing-grid > * {
   opacity: 0;
-  animation-delay: 0.4s;
+  transform: translateY(60px) scale(0.9);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pricing-card-2 {
-  animation: pricingSlideIn 0.8s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.6s;
-}
-
-.pricing-card-3 {
-  animation: pricingSlideIn 0.8s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.8s;
-}
-
-@keyframes pricingSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(60px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.pricing-grid > *.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .pricing-card {
@@ -728,36 +693,25 @@ section {
   color: var(--gray-300);
 }
 
-.footer.animate-footer-col-1,
-.footer.animate-footer-col-2,
-.footer.animate-footer-col-3,
-.footer.animate-footer-col-4 {
-  animation: footerFadeIn 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.footer.animate-footer-col-1 { animation-delay: 0.3s; }
-.footer.animate-footer-col-2 { animation-delay: 0.5s; }
-.footer.animate-footer-col-3 { animation-delay: 0.7s; }
-.footer.animate-footer-col-4 { animation-delay: 0.9s; }
-
-@keyframes footerFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 50px;
+}
+
+/* Footer columns - animated via useStaggerAnimation hook */
+.footer-col {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-col.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .footer-col h4 {

@@ -6,7 +6,7 @@ import './LandingPage.css'
 import TiltedCard from '../../components/tilted-cards'
 
 // Animation hook for fade-in on scroll
-function useFadeInOnScroll() {
+function useFadeInOnScroll(options = {}) {
   const ref = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -18,7 +18,10 @@ function useFadeInOnScroll() {
           observer.disconnect()
         }
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { 
+        threshold: options.threshold || 0.1, 
+        rootMargin: options.rootMargin || '-50px'
+      }
     )
 
     if (ref.current) {
@@ -26,9 +29,39 @@ function useFadeInOnScroll() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [options.threshold, options.rootMargin])
 
   return [ref, isVisible]
+}
+
+// Hook for animating multiple children with stagger
+function useStaggerAnimation(parentRef, isVisible, count = 1, delay = 0.1) {
+  useEffect(() => {
+    if (!parentRef.current) return
+    
+    const children = parentRef.current.children
+    
+    if (isVisible) {
+      Array.from(children).forEach((child, index) => {
+        if (child) {
+          child.style.transitionDelay = `${delay + index * 0.15}s`
+          // Force reflow to restart transition
+          child.classList.remove('visible')
+          void child.offsetWidth // eslint-disable-line no-unused-expressions
+          setTimeout(() => {
+            child.classList.add('visible')
+          }, 50 + (delay + index * 0.15) * 100)
+        }
+      })
+    } else {
+      Array.from(children).forEach((child) => {
+        if (child) {
+          child.classList.remove('visible')
+          child.style.transitionDelay = '0s'
+        }
+      })
+    }
+  }, [isVisible, count, delay, parentRef])
 }
 
 
@@ -61,22 +94,22 @@ function Navbar() {
 }
 
 function Home() {
-  const [ref, isVisible] = useFadeInOnScroll()
+  const [sectionRef, isVisible] = useFadeInOnScroll({ threshold: 0.2, rootMargin: '-80px' })
 
   return (
     <section id='Home' className="hero-section" aria-label="Hero section">
-      <div className={`home ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
-        <div className="home-content animate-slide-up">
-          <h1 className="animate-title">TaskMaster</h1>
-          <h2 className="animate-subtitle">Stay Organized. Get Things Done.</h2>
-          <h3 className="animate-description">Manage your tasks, track your progress, and boost your productivity — all in one place</h3>
-          <Link to="/signup" className="cta-button animate-cta" aria-label="Get started with TaskMaster">
+      <div className={`home ${isVisible ? 'fade-in-visible' : ''}`} ref={sectionRef}>
+        <div className="home-content">
+          <h1 className={`animate-element ${isVisible ? 'visible' : ''}`}>TaskMaster</h1>
+          <h2 className={`animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.1s' }}>Stay Organized. Get Things Done.</h2>
+          <h3 className={`animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.2s' }}>Manage your tasks, track your progress, and boost your productivity — all in one place</h3>
+          <Link to="/signup" className={`cta-button animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.3s' }} aria-label="Get started with TaskMaster">
             Get Started
             <ArrowRight className="arrow-icon" aria-hidden="true" />
           </Link>
-          <p className='cta-content animate-cta-content'>No credit card. No clutter. Just clarity.</p>
+          <p className={`cta-content animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.4s' }}>No credit card. No clutter. Just clarity.</p>
         </div>
-        <div className="home-image animate-image">
+        <div className={`home-image animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.3s' }}>
           <img
             src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFza3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60"
             alt="Task Management Dashboard - Organize and track your tasks efficiently"
@@ -91,17 +124,19 @@ function Home() {
 }
 
 function Features() {
-  const [ref, isVisible] = useFadeInOnScroll()
+  const [sectionRef, isVisible] = useFadeInOnScroll({ threshold: 0.15, rootMargin: '-60px' })
+  const featuresContainerRef = useRef(null)
+  useStaggerAnimation(featuresContainerRef, isVisible, 4, 0.1)
 
   return (
     <section id='Features' className="features-section" aria-label="Features section">
-      <div className={`features ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+      <div className={`features ${isVisible ? 'fade-in-visible' : ''}`} ref={sectionRef}>
         <header className="animate-header">
-          <h1>Features</h1>
-          <p>Discover the powerful features of our task manager!</p>
+          <h1 className={`animate-element ${isVisible ? 'visible' : ''}`}>Features</h1>
+          <p className={`animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.1s' }}>Discover the powerful features of our task manager!</p>
         </header>
 
-        <div className="features-container" role="list">
+        <div className="features-container" ref={featuresContainerRef} role="list">
           <TiltedCard
             title="Smart Task Organization"
             text="Turn chaos into clarity. Group tasks, set priorities, and always know what to do next"
@@ -132,16 +167,18 @@ function Features() {
 }
 
 function HowItWorks() {
-  const [ref, isVisible] = useFadeInOnScroll()
+  const [sectionRef, isVisible] = useFadeInOnScroll({ threshold: 0.15, rootMargin: '-60px' })
+  const stepsRef = useRef(null)
+  useStaggerAnimation(stepsRef, isVisible, 3, 0.15)
 
   return (
     <section className="how-it-works-section" aria-label="How It Works section">
-      <div className={`how-it-works ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+      <div className={`how-it-works ${isVisible ? 'fade-in-visible' : ''}`} ref={sectionRef}>
         <header className="animate-header">
-          <h1>How It Works</h1>
+          <h1 className={`animate-element ${isVisible ? 'visible' : ''}`}>How It Works</h1>
           <div className="steps">
-            <p>Three Simple Steps to Transform Your Day With Ease</p>
-            <div className="step" role="list">
+            <p className={`animate-element ${isVisible ? 'visible' : ''}`} style={{ animationDelay: '0.1s' }}>Three Simple Steps to Transform Your Day With Ease</p>
+            <div className="step" ref={stepsRef} role="list">
               <div className="step-card step-card-1" role="listitem">
                 <h2>Step 1</h2>
                 <p>Write down your tasks.</p>
@@ -167,15 +204,17 @@ function HowItWorks() {
 
 
 function Pricing() {
-  const [ref, isVisible] = useFadeInOnScroll()
+  const [sectionRef, isVisible] = useFadeInOnScroll({ threshold: 0.1, rootMargin: '-50px' })
+  const pricingGridRef = useRef(null)
+  useStaggerAnimation(pricingGridRef, isVisible, 3, 0.15)
 
   return (
     <section id='Pricing' className="pricing-section" aria-label="Pricing section">
-      <div className={`pricing ${isVisible ? 'fade-in-visible' : ''}`} ref={ref}>
+      <div className={`pricing ${isVisible ? 'fade-in-visible' : ''}`} ref={sectionRef}>
         <header className="animate-header">
-          <h1 className='h1-price'>Simple Plans That Scale With You</h1>
+          <h1 className={`h1-price animate-element ${isVisible ? 'visible' : ''}`}>Simple Plans That Scale With You</h1>
         </header>
-        <div className='pricing-grid' role="list">
+        <div className='pricing-grid' ref={pricingGridRef} role="list">
           <div className="pricing-card pricing-card-1" role="listitem">
             <h3>Free Plan</h3>
             <p>Best For Individuals. Getting Started</p>
@@ -227,14 +266,16 @@ function Pricing() {
 }
 
 function Contact() {
-  const [ref, isVisible] = useFadeInOnScroll()
+  const [sectionRef, isVisible] = useFadeInOnScroll({ threshold: 0.1, rootMargin: '-50px' })
+  const footerColsRef = useRef(null)
+  useStaggerAnimation(footerColsRef, isVisible, 4, 0.1)
 
   return (
     <section id='contact' className="contact-section" aria-label="Contact section">
-      <footer className={`footer ${isVisible ? 'fade-in-visible' : ''}`} id="contact" ref={ref}>
-        <div className="footer-container">
+      <footer className={`footer ${isVisible ? 'fade-in-visible' : ''}`} id="contact" ref={sectionRef}>
+        <div className="footer-container" ref={footerColsRef}>
 
-          <div className="footer-col animate-footer-col-1">
+          <div className="footer-col footer-col-1">
             <h3 className="logo">TaskMaster</h3>
             <p>
               TaskMaster helps you stay organized, focused, and productive —
@@ -247,7 +288,7 @@ function Contact() {
             </address>
           </div>
 
-          <div className="footer-col animate-footer-col-2">
+          <div className="footer-col footer-col-2">
             <h4>Pages</h4>
             <a href="#home">Home</a>
             <a href="#features">Features</a>
@@ -255,7 +296,7 @@ function Contact() {
             <a href="#contact">Contact</a>
           </div>
 
-          <div className="footer-col animate-footer-col-3">
+          <div className="footer-col footer-col-3">
             <h4>Support</h4>
             <a href="#">Help Center</a>
             <a href="#">FAQs</a>
@@ -263,7 +304,7 @@ function Contact() {
             <a href="#">Terms</a>
           </div>
 
-          <div className="footer-col animate-footer-col-4">
+          <div className="footer-col footer-col-4">
             <h4>Contact</h4>
 
             <div className="socials" role="list" aria-label="Social media links">
