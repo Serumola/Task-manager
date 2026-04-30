@@ -15,6 +15,64 @@
   transform: translateY(0);
 }
 
+/* Dashboard Scroll-Triggered Animations */
+.stats-row,
+.charts-grid,
+.task-list-section,
+.add-task-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stats-row.visible,
+.charts-grid.visible,
+.task-list-section.visible,
+.add-task-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stat Cards - Stagger Animation */
+.stats-row .stat-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stats-row .stat-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Chart Cards - Stagger Animation */
+.charts-grid .chart-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.charts-grid .chart-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Task Items - Stagger Animation */
+.task-list-section .task-item {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.task-list-section .task-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .dashboard-main-content {
   flex: 1;
   padding: 40px;
@@ -1074,6 +1132,12 @@
   .chart-card:last-child {
     grid-column: span 2;
   }
+
+  /* Adjust animations for tablet */
+  .stats-row .stat-card,
+  .charts-grid .chart-card {
+    transition-duration: 0.5s;
+  }
 }
 
 /* Mobile - 768px */
@@ -1155,6 +1219,24 @@
     max-width: 95vw;
   }
 
+  /* Adjust animations for mobile */
+  .stats-row,
+  .charts-grid,
+  .task-list-section,
+  .add-task-section {
+    transition-duration: 0.5s;
+  }
+
+  .stats-row .stat-card,
+  .charts-grid .chart-card {
+    transform: translateY(20px) scale(0.97);
+  }
+
+  .task-list-section .task-item {
+    transform: translateX(-10px);
+  }
+}
+
   .priority-selector {
     flex-direction: row;
   }
@@ -1201,5 +1283,22 @@
   .bar-wrapper {
     width: 36px;
     height: 100px;
+  }
+
+  /* Simplify animations on small screens */
+  .stats-row,
+  .charts-grid,
+  .task-list-section,
+  .add-task-section {
+    transition-duration: 0.4s;
+  }
+
+  .stats-row .stat-card,
+  .charts-grid .chart-card {
+    transform: translateY(15px) scale(0.98);
+  }
+
+  .task-list-section .task-item {
+    transform: translateX(-5px);
   }
 }

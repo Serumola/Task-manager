@@ -1,10 +1,56 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import { tasksAPI, reportsAPI } from "../../services/api";
 import { Plus, Trash2, CheckCircle, Circle, Calendar, Flag, Clock, AlertCircle, BarChart3, PieChart } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 import { SkeletonDashboard } from "../../components/SkeletonLoader";
 import "./Dashboard.css";
+
+// Hook for fade-in on scroll
+function useFadeInOnScroll(options = {}) {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { 
+        threshold: options.threshold || 0.1, 
+        rootMargin: options.rootMargin || '0px'
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [options.threshold, options.rootMargin]);
+
+  return [ref, isVisible];
+}
+
+// Hook for staggering children animations
+function useStaggerAnimation(parentRef, isVisible, count = 4, delay = 0.1) {
+  useEffect(() => {
+    if (!parentRef.current || !isVisible) return;
+    
+    const children = parentRef.current.children;
+    Array.from(children).forEach((child, index) => {
+      if (child) {
+        child.style.transitionDelay = `${delay + index * 0.1}s`;
+        setTimeout(() => {
+          child.classList.add('visible');
+        }, 50 + (delay + index * 0.1) * 100);
+      }
+    });
+  }, [isVisible, count, delay, parentRef]);
+}
 
 export default function Dashboard() {
   const toast = useToast();
@@ -20,6 +66,21 @@ export default function Dashboard() {
     priority: "medium",
     due_date: ""
   });
+
+  // Scroll animation refs
+  const statsRowRef = useRef(null);
+  const chartsGridRef = useRef(null);
+  const addTaskRef = useRef(null);
+  const taskListRef = useRef(null);
+  const [statsVisible, statsIsVisible] = useFadeInOnScroll({ threshold: 0.2 });
+  const [chartsVisible, chartsIsVisible] = useFadeInOnScroll({ threshold: 0.2 });
+  const [addTaskVisible, addTaskIsVisible] = useFadeInOnScroll({ threshold: 0.15 });
+  const [tasksVisible, tasksIsVisible] = useFadeInOnScroll({ threshold: 0.1 });
+
+  useStaggerAnimation(statsRowRef, statsIsVisible, 4, 0.05);
+  useStaggerAnimation(chartsGridRef, chartsIsVisible, 3, 0.1);
+  useStaggerAnimation(addTaskRef, addTaskIsVisible, 1, 0.05);
+  useStaggerAnimation(taskListRef, tasksIsVisible, taskList.length, 0.05);
 
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -189,29 +250,29 @@ export default function Dashboard() {
         {stats && (
           <>
             {/* Stats Row - Animated */}
-            <div className="stats-row">
-              <div className="stat-card total-tasks stagger-item">
+            <div className="stats-row" ref={statsRowRef}>
+              <div className="stat-card total-tasks">
                 <div className="stat-header">
                   <h3>Total Tasks</h3>
                   <CheckCircle size={20} className="stat-icon" />
                 </div>
                 <div className="stat-number">{stats.totalTasks || 0}</div>
               </div>
-              <div className="stat-card done-tasks stagger-item">
+              <div className="stat-card done-tasks">
                 <div className="stat-header">
                   <h3>Completed</h3>
                   <CheckCircle size={20} className="stat-icon" />
                 </div>
                 <div className="stat-number">{stats.completedTasks || 0}</div>
               </div>
-              <div className="stat-card pending-tasks stagger-item">
+              <div className="stat-card pending-tasks">
                 <div className="stat-header">
                   <h3>Pending</h3>
                   <Clock size={20} className="stat-icon" />
                 </div>
                 <div className="stat-number">{stats.pendingTasks || 0}</div>
               </div>
-              <div className="stat-card completion-rate stagger-item">
+              <div className="stat-card completion-rate">
                 <div className="stat-header">
                   <h3>Completion Rate</h3>
                   <BarChart3 size={20} className="stat-icon" />
@@ -220,8 +281,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Charts Section */}
-            <div className="charts-grid">
+            {/* Charts Section - Animated */}
+            <div className="charts-grid" ref={chartsGridRef}>
               {/* Priority Distribution - Pie Chart */}
               <div className="chart-card">
                 <div className="chart-header">
@@ -372,7 +433,7 @@ export default function Dashboard() {
           </>
         )}
 
-        <div className="add-task-section">
+        <div className="add-task-section" ref={addTaskRef}>
           <div className="section-header">
             <h2>Quick Add Task</h2>
             <button className="add-btn" onClick={() => setShowAddModal(true)}>
@@ -394,16 +455,16 @@ export default function Dashboard() {
           </form>
         </div>
 
-        <div className="task-list-section">
+        <div className="task-list-section" ref={taskListRef}>
           <h2>Recent Tasks</h2>
           {taskList.length === 0 && (
-            <p className="no-tasks-text content-fade-in">No tasks yet. Add one above!</p>
+            <p className="no-tasks-text">No tasks yet. Add one above!</p>
           )}
           {taskList.slice(0, 5).map((task, index) => (
             <div
               key={task.id}
-              className={`task-item ${task.status === "completed" ? "task-done" : ""} stagger-item`}
-              style={{ animationDelay: `${index * 0.05}s` }}
+              className={`task-item ${task.status === "completed" ? "task-done" : ""}`}
+              style={{ transitionDelay: `${index * 0.05}s` }}
             >
               <div className="task-left">
                 <button
