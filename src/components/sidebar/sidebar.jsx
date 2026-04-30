@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Mobile Top Navbar */}
       <nav className="mobile-navbar">
         <div className="navbar-left">
-          <h1 className="navbar-title">Task Master</h1>
+          <h1 className="navbar-title">TaskMaster</h1>
         </div>
         <div className="navbar-right">
           <button
@@ -74,10 +74,7 @@ export default function Sidebar() {
       <aside className="sidebar-container">
         {/* HEADER */}
         <div className="sidebar-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span className="sidebar-logo">🟨</span>
-            <h2 className="sidebar-title">Task Manager</h2>
-          </div>
+          <h2 className="sidebar-title">TaskMaster</h2>
         </div>
 
         {/* SEARCH */}

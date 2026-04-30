@@ -41,7 +41,7 @@ export default function Login() {
       <div className="login-box">
         <div className="login-header">
           <h1>Welcome Back</h1>
-          <p>Sign in to your Task Manager account</p>
+          <p>Sign in to your TaskMaster account</p>
         </div>
 
         {error && (

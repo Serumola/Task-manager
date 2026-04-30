@@ -29,7 +29,7 @@ export default function LoadingOverlay({ show, text = '' }) {
             </svg>
           </div>
         </div>
-        <h1 className="loading-title">Task Manager</h1>
+        <h1 className="loading-title">TaskMaster</h1>
         <div className="loading-progress">
           <div className="loading-progress-bar"></div>
         </div>

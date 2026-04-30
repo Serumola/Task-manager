@@ -67,7 +67,7 @@ export default function SignUp() {
       <div className="signup-box">
         <div className="signup-header">
           <h1>Create Account</h1>
-          <p>Start your productivity journey with Task Manager</p>
+          <p>Start your productivity journey with TaskMaster</p>
         </div>
 
         {error && (

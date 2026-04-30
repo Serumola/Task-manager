@@ -16,23 +16,17 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: center;
+  padding: 24px 20px;
   border-bottom: 1px solid var(--green-700);
 }
 
-.sidebar-logo {
-  font-size: 28px;
-  flex-shrink: 0;
-}
-
 .sidebar-title {
-  font-size: 20px;
-  font-weight: 700;
-  flex: 1;
-  margin-left: 12px;
+  font-size: 22px;
+  font-weight: 800;
   color: var(--white);
   white-space: nowrap;
+  letter-spacing: -0.5px;
 }
 
 .collapse-btn {

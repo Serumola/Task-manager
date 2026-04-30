@@ -789,6 +789,12 @@ section {
 
 /* RESPONSIVE */
 
+@media (max-width: 1200px) {
+  .pricing-grid {
+    max-width: 900px;
+  }
+}
+
 @media (max-width: 900px) {
   .navbar {
     width: 95%;
@@ -815,6 +821,7 @@ section {
 
   .pricing-grid {
     grid-template-columns: 1fr;
+    max-width: 400px;
   }
 
   .pricing-card.pricing-popular {
@@ -836,5 +843,128 @@ section {
 
   .contact-item {
     justify-content: center;
+  }
+
+  /* Adjust animations for tablet */
+  .features-container {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  .animate-element {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  .home-content h1 {
+    font-size: 36px;
+  }
+
+  .home-content h2 {
+    font-size: 24px;
+  }
+
+  .home-content h3 {
+    font-size: 16px;
+  }
+
+  .features h1 {
+    font-size: 36px;
+  }
+
+  .how-it-works > div > h1 {
+    font-size: 32px;
+  }
+
+  .h1-price {
+    font-size: 32px;
+  }
+
+  /* Ensure animations work on small screens */
+  .fade-in-visible {
+    animation-duration: 0.6s;
+  }
+
+  .animate-element,
+  .features-container > *,
+  .step-card,
+  .pricing-grid > *,
+  .footer-col {
+    transition-duration: 0.5s;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile-specific adjustments */
+  section {
+    scroll-margin-top: 80px;
+  }
+
+  .home {
+    padding: 100px 15px 40px;
+  }
+
+  .home-content h1 {
+    font-size: 28px;
+  }
+
+  .home-content h2 {
+    font-size: 20px;
+  }
+
+  .home-content h3 {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .cta-button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .features,
+  .how-it-works-section,
+  .pricing {
+    padding: 60px 15px;
+  }
+
+  .features h1,
+  .how-it-works > div > h1,
+  .h1-price {
+    font-size: 28px;
+  }
+
+  .step-card,
+  .pricing-card {
+    padding: 20px;
+  }
+
+  .footer {
+    padding: 60px 15px 20px;
+  }
+
+  /* Simplify animations on very small screens */
+  .animate-element {
+    transform: translateY(15px);
+  }
+
+  .features-container > *,
+  .step-card,
+  .pricing-grid > *,
+  .footer-col {
+    transform: translateY(20px);
+  }
+}
+
+/* Ensure transitions work on all screen sizes */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
