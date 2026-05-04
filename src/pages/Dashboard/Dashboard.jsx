@@ -102,6 +102,7 @@ export default function Dashboard() {
   async function fetchDashboardData() {
     try {
       setLoading(true);
+      
       const [tasksData, reportsData] = await Promise.all([
         tasksAPI.getAll(),
         reportsAPI.getDashboard()
