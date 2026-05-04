@@ -1235,7 +1235,6 @@
   .task-list-section .task-item {
     transform: translateX(-10px);
   }
-}
 
   .priority-selector {
     flex-direction: row;
